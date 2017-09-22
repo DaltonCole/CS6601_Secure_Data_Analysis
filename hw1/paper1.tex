@@ -22,7 +22,7 @@
 
 	Following this, each truth table is replaced with it's corresponding Garbled-Truth-Table (GTT) by replacing each 0 or 1 with $w_k^0$ or $w_k^1$ respectively. The GTT is replaced by the Encrypted-Garbled-Truth-Table (EGTT) which is an encrypted version of the GTT. The encryption is performed by SHA1 hashing $v_i^x \Vert k \Vert x' \Vert y'$ with the plane text $w_k^x$ where $x' = x \oplus p_i$ and  $y' = y \oplus p_j$ and x, y are the entries in the original truth table. This encryption will be represented as $Enc(w_i^j)$. 
 
-	To make the Permutted-Encrypted-Garbled-Truth-Table (PEGTT), the rows in the EGTT have to be swapped based on the following rule: if $p_i = 1$, the first two entries of the table are swapped with the last two entries; if $p_j = 1$, then the first and third are swapped and the second and fourth entries are swapped. The GTT, EGTT, and PEGTT for gate 0 can be found in Table \ref{tab:gtt0}. For gates 1-6, see Tables \ref{tab:gtt1}, \ref{tab:gtt2}, \ref{tab:gtt3}, \ref{tab:gtt4}, \ref{tab:gtt5}, \ref{tab:gtt6}.
+	To make the Permutted-Encrypted-Garbled-Truth-Table (PEGTT), the rows in the EGTT have to be swapped based on the following rule: if $p_i = 1$, the first two entries of the table are swapped with the last two entries; if $p_j = 1$, then the first and third are swapped and the second and fourth entries are swapped. The GTT, EGTT, and PEGTT for gate 0 can be found in Table \ref{tab:gtt0}. For gates 1-6, see Tables \ref{tab:gtt1}, \ref{tab:gtt2}, \ref{tab:gtt3}, \ref{tab:gtt4}, \ref{tab:gtt5}, \ref{tab:gtt6}. For another example, see attached.
 	
 
 	\begin{figure}
@@ -451,7 +451,133 @@
 
 	\section{Show how to evaluate the garbed circuit securely.}
 	To evaluate the garbled circuit, Bob sends to Alice the garbled circuit along with his wired input, in this case $w_0^x$, $w_2^x$, $w_4^x$, and $w_6^x$. For Alice to obtain her garbled input ($w_1^y$, $w_3^y$, $w_5^y$, and $w_7^y$), she must use oblivious transfer (OT) with Bob.
-	
+
+	For each gate, the following must take place. Alice splits $w_i^x$ into $v_i$ and $x$, where $x$ equals the least significant bit of $W_i^x$ and $v_i$ is the remainder of $W_i^x$. Similarly, split $W_j^y$ into $v_j$ and $y$, where $y$ equals the least significant bit of $W_j^y$ and $v_j$ is the remainder of $w_j^y$. The values of $x$ and $y$ are used to index into the PEGTT where $x$ is the high bit and $y$ is the low bit. To retrieve $w_k$, Alice has to hash $v_i \Vert k \Vert x \Vert y$ and $v_j \Vert k \Vert x \Vert y$, and then XOR the two hashes with the ciphertext.
+
+	Alice then uses the transition table she got from Bob to interpret the circuit's true output. She sends the garbled value to Bob, and Bob maps the garbled value to the true value as well.
+
+	For example, let's say Bob has a value of $1011$ and Alice has a value of $1010$. The following tables illistrates how to evaulate the garbled circuit securely: \ref{tab:DG0}, \ref{tab:DG1}, \ref{tab:DG2}, \ref{tab:DG3}, \ref{tab:DG4}, \ref{tab:DG5}, \ref{tab:DG6}.
+
+
+	\begin{table}
+		\centering
+		\caption{Decrypting Gate 0}
+		\label{tab:DG0}
+		\begin{tabular}{|c|c||c|c|}
+			\hline
+			\multicolumn{2}{|c||}{$w_0$} & \multicolumn{2}{|c|}{$w_1$} \\
+			\hline
+			$v_0 = 11111111$ & $x = 1$ & $v_1 = 10000000$ & $y = 0$ \\
+			\hline
+			\multicolumn{4}{|c||}{$w_8 = hash(v_0 \Vert 8 \Vert x \Vert y) \oplus hash(v_1 \Vert 8 \Vert x \Vert y) \oplus Enc(w_8^1)$} \\
+			\hline
+			\multicolumn{4}{|c||}{Transition Table($w_8^1$) = 1} \\
+			\hline
+		\end{tabular}
+	\end{table}
+
+	\begin{table}
+		\centering
+		\caption{Decrypting Gate 1}
+		\label{tab:DG1}
+		\begin{tabular}{|c|c||c|c|}
+			\hline
+			\multicolumn{2}{|c||}{$w_2$} & \multicolumn{2}{|c|}{$w_3$} \\
+			\hline
+			$v_2 = 10000000$ & $x = 0$ & $v_3 = 00000011$ & $y = 1$ \\
+			\hline
+			\multicolumn{4}{|c||}{$w_9 = hash(v_2 \Vert 9 \Vert x \Vert y) \oplus hash(v_3 \Vert 9 \Vert x \Vert y) \oplus Enc(w_9^1)$} \\
+			\hline
+			\multicolumn{4}{|c||}{Transition Table($w_9^1$) = 1} \\
+			\hline
+		\end{tabular}
+	\end{table}
+
+	\begin{table}
+		\centering
+		\caption{Decrypting Gate 2}
+		\label{tab:DG2}
+		\begin{tabular}{|c|c||c|c|}
+			\hline
+			\multicolumn{2}{|c||}{$w_4$} & \multicolumn{2}{|c|}{$w_5$} \\
+			\hline
+			$v_4 = 001000001$ & $x = 1$ & $v_5 = 101000000$ & $y = 0$ \\
+			\hline
+			\multicolumn{4}{|c||}{$w_{10} = hash(v_4 \Vert 10 \Vert x \Vert y) \oplus hash(v_5 \Vert 10 \Vert x \Vert y) \oplus Enc(w_{10}^1)$} \\
+			\hline
+			\multicolumn{4}{|c||}{Transition Table($w_{10}^1$) = 1} \\
+			\hline
+		\end{tabular}
+	\end{table}
+
+	\begin{table}
+		\centering
+		\caption{Decrypting Gate 3}
+		\label{tab:DG3}
+		\begin{tabular}{|c|c||c|c|}
+			\hline
+			\multicolumn{2}{|c||}{$w_6$} & \multicolumn{2}{|c|}{$w_7$} \\
+			\hline
+			$v_6 = 01100000$ & $x = 1$ & $v_7 = 11100000$ & $y = 0$ \\
+			\hline
+			\multicolumn{4}{|c||}{$w_{11} = hash(v_6 \Vert 11 \Vert x \Vert y) \oplus hash(v_7 \Vert 11 \Vert x \Vert y) \oplus Enc(w_{11}^0)$} \\
+			\hline
+			\multicolumn{4}{|c||}{Transition Table($w_{11}^0$) = 0} \\
+			\hline
+		\end{tabular}
+	\end{table}
+
+	\begin{table}
+		\centering
+		\caption{Decrypting Gate 4}
+		\label{tab:DG4}
+		\begin{tabular}{|c|c||c|c|}
+			\hline
+			\multicolumn{2}{|c||}{$w_8$} & \multicolumn{2}{|c|}{$w_9$} \\
+			\hline
+			$v_8 = 00010000$ & $x = 1$ & $v_9 = 10010000$ & $y = 0$ \\
+			\hline
+			\multicolumn{4}{|c||}{$w_{12} = hash(v_8 \Vert 12 \Vert x \Vert y) \oplus hash(v_9 \Vert 12 \Vert x \Vert y) \oplus Enc(w_{12}^0)$} \\
+			\hline
+			\multicolumn{4}{|c||}{Transition Table($w_{12}^1$) = 1} \\
+			\hline
+		\end{tabular}
+	\end{table}
+
+	\begin{table}
+		\centering
+		\caption{Decrypting Gate 5}
+		\label{tab:DG5}
+		\begin{tabular}{|c|c||c|c|}
+			\hline
+			\multicolumn{2}{|c||}{$w_{10}$} & \multicolumn{2}{|c|}{$w_{11}$} \\
+			\hline
+			$v_{10} = 01010000$ & $x = 1$ & $v_{11} = 00001011$ & $y = 1$ \\
+			\hline
+			\multicolumn{4}{|c||}{$w_{13} = hash(v_{10} \Vert 13 \Vert x \Vert y) \oplus hash(v_{11} \Vert 13 \Vert x \Vert y) \oplus Enc(w_{13}^0)$} \\
+			\hline
+			\multicolumn{4}{|c||}{Transition Table($w_{13}^0$) = 0} \\
+			\hline
+		\end{tabular}
+	\end{table}
+
+	\begin{table}
+		\centering
+		\caption{Decrypting Gate 6}
+		\label{tab:DG6}
+		\begin{tabular}{|c|c||c|c|}
+			\hline
+			\multicolumn{2}{|c||}{$w_{12}$} & \multicolumn{2}{|c|}{$w_{13}$} \\
+			\hline
+			$v_{12} = 00110000$ & $x = 1$ & $v_{13} = 00001101$ & $y = 1$ \\
+			\hline
+			\multicolumn{4}{|c||}{$w_{14} = hash(v_{12} \Vert 14 \Vert x \Vert y) \oplus hash(v_{13} \Vert 14 \Vert x \Vert y) \oplus Enc(w_{14}^0)$} \\
+			\hline
+			\multicolumn{4}{|c||}{Transition Table($w_{14}^0$) = 0} \\
+			\hline
+		\end{tabular}
+	\end{table}
+		
 	
 		
 \end{document}
