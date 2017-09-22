@@ -22,7 +22,7 @@
 
 	Following this, each truth table is replaced with it's corresponding Garbled-Truth-Table (GTT) by replacing each 0 or 1 with $w_k^0$ or $w_k^1$ respectively. The GTT is replaced by the Encrypted-Garbled-Truth-Table (EGTT) which is an encrypted version of the GTT. The encryption is performed by SHA1 hashing $v_i^x \Vert k \Vert x' \Vert y'$ with the plane text $w_k^x$ where $x' = x \oplus p_i$ and  $y' = y \oplus p_j$ and x, y are the entries in the original truth table. This encryption will be represented as $Enc(w_i^j)$. 
 
-	To make the Permutted-Encrypted-Garbled-Truth-Table (PEGTT), the rows in the EGTT have to be swapped based on the following rule: if $p_i = 1$, the first two entries of the table are swapped with the last two entries; if $p_j = 1$, then the first and third are swapped and the second and fourth entries are swapped. The GTT, EGTT, and PEGTT for gate 0 can be found in Table \ref{tab:gtt0}. %For gates 1-14, see Tables \ref{tab:gtt1}, \ref{tab:gtt2}, \ref{tab:gtt3}, \ref{tab:gtt4}, \ref{tab:gtt5}, \ref{tab:gtt6}, \ref{tab:gtt7}, \ref{tab:gtt8}, \ref{tab:gtt9}, \ref{tab:gtt10}, \ref{tab:gtt11}, \ref{tab:gtt12}, \ref{tab:gtt13}, \ref{tab:gtt14}.
+	To make the Permutted-Encrypted-Garbled-Truth-Table (PEGTT), the rows in the EGTT have to be swapped based on the following rule: if $p_i = 1$, the first two entries of the table are swapped with the last two entries; if $p_j = 1$, then the first and third are swapped and the second and fourth entries are swapped. The GTT, EGTT, and PEGTT for gate 0 can be found in Table \ref{tab:gtt0}. For gates 1-14, see Tables \ref{tab:gtt1}, \ref{tab:gtt2}, \ref{tab:gtt3}, \ref{tab:gtt4}, \ref{tab:gtt5}, \ref{tab:gtt6}.
 	
 
 	\begin{figure}
@@ -176,22 +176,274 @@
 			0 & 0 & 1 	&
 				$w_{0}^0$	& $w_{1}^0$	& $w_{8}^1$	& 
 					$Enc(w_{0}^0)$	& $Enc(w_{1}^0)$	& $Enc(w_{8}^1)$ &
+						$Enc(w_{0}^1)$	& $Enc(w_{1}^0)$	& $Enc(w_{8}^0)$ \\
+			\hline
+			0 & 1 & 0 	&
+				$w_{0}^0$	& $w_{1}^1$	& $w_{8}^0$	& 
+					$Enc(w_{0}^0)$	& $Enc(w_{1}^1)$	& $Enc(w_{8}^0)$ &
+						$Enc(w_{0}^1)$	& $Enc(w_{1}^1)$	& $Enc(w_{8}^1)$ \\
+			\hline
+			1 & 0 & 0 	&
+				$w_{0}^1$	& $w_{1}^0$	& $w_{8}^0$	& 
+					$Enc(w_{0}^1)$	& $Enc(w_{1}^0)$	& $Enc(w_{8}^0)$ &
 						$Enc(w_{0}^0)$	& $Enc(w_{1}^0)$	& $Enc(w_{8}^1)$ \\
 			\hline
-			0 & 0 & 1 	&
-				$w_{0}^0$	& $w_{1}^0$	& $w_{8}^1$	& 
-					$Enc(w_{0}^0)$	& $Enc(w_{1}^0)$	& $Enc(w_{8}^1)$ &
-						$Enc(w_{0}^0)$	& $Enc(w_{1}^0)$	& $Enc(w_{8}^1)$ \\
+			1 & 1 & 1 	&
+				$w_{0}^1$	& $w_{1}^1$	& $w_{8}^1$	& 
+					$Enc(w_{0}^1)$	& $Enc(w_{1}^1)$	& $Enc(w_{8}^1)$ &
+						$Enc(w_{0}^0)$	& $Enc(w_{1}^1)$	& $Enc(w_{8}^0)$ \\
+			\hline
+		\end{tabular}
+		\end{adjustbox}
+	\end{table}
+
+	\begin{table}
+		\centering
+		\caption{GTT, EGTT, PEGTT for Gate 1}
+		\label{tab:gtt1}
+		\begin{adjustbox}{width=1\textwidth}
+		\begin{tabular}{|c|c|c||c|c|c||c|c|c||c|c|c|}
+			\hline
+			\multicolumn{3}{|c||}{Truth Table} 		& 
+				\multicolumn{3}{|c||}{GTT}			& 
+					\multicolumn{3}{|c||}{EGTT} 		& 
+						\multicolumn{3}{|c|}{PEGTT} \\
+			\hline
+			\hline
+			X & Y & Out	& 
+				X & Y & Out	& 
+					X & Y & Out	& 
+						X & Y & Out	\\
 			\hline
 			0 & 0 & 1 	&
-				$w_{0}^0$	& $w_{1}^0$	& $w_{8}^1$	& 
-					$Enc(w_{0}^0)$	& $Enc(w_{1}^0)$	& $Enc(w_{8}^1)$ &
-						$Enc(w_{0}^0)$	& $Enc(w_{1}^0)$	& $Enc(w_{8}^1)$ \\
+				$w_{2}^0$	& $w_{3}^0$	& $w_{9}^1$	& 
+					$Enc(w_{2}^0)$	& $Enc(w_{3}^0)$	& $Enc(w_{9}^1)$ &
+						$Enc(w_{2}^1)$	& $Enc(w_{3}^0)$	& $Enc(w_{9}^0)$ \\
+			\hline
+			0 & 1 & 0 	&
+				$w_{2}^0$	& $w_{3}^1$	& $w_{9}^0$	& 
+					$Enc(w_{2}^0)$	& $Enc(w_{3}^1)$	& $Enc(w_{9}^0)$ &
+						$Enc(w_{2}^1)$	& $Enc(w_{3}^1)$	& $Enc(w_{9}^1)$ \\
+			\hline
+			1 & 0 & 0 	&
+				$w_{2}^1$	& $w_{3}^0$	& $w_{9}^0$	& 
+					$Enc(w_{2}^1)$	& $Enc(w_{3}^0)$	& $Enc(w_{9}^0)$ &
+						$Enc(w_{2}^0)$	& $Enc(w_{3}^0)$	& $Enc(w_{9}^1)$ \\
+			\hline
+			1 & 1 & 1 	&
+				$w_{2}^1$	& $w_{3}^1$	& $w_{9}^1$	& 
+					$Enc(w_{2}^1)$	& $Enc(w_{3}^1)$	& $Enc(w_{9}^1)$ &
+						$Enc(w_{2}^0)$	& $Enc(w_{3}^1)$	& $Enc(w_{9}^0)$ \\
+			\hline
+		\end{tabular}
+		\end{adjustbox}
+	\end{table}
+
+	\begin{table}
+		\centering
+		\caption{GTT, EGTT, PEGTT for Gate 2}
+		\label{tab:gtt2}
+		\begin{adjustbox}{width=1\textwidth}
+		\begin{tabular}{|c|c|c||c|c|c||c|c|c||c|c|c|}
+			\hline
+			\multicolumn{3}{|c||}{Truth Table} 		& 
+				\multicolumn{3}{|c||}{GTT}			& 
+					\multicolumn{3}{|c||}{EGTT} 		& 
+						\multicolumn{3}{|c|}{PEGTT} \\
+			\hline
+			\hline
+			X & Y & Out	& 
+				X & Y & Out	& 
+					X & Y & Out	& 
+						X & Y & Out	\\
 			\hline
 			0 & 0 & 1 	&
-				$w_{0}^0$	& $w_{1}^0$	& $w_{8}^1$	& 
-					$Enc(w_{0}^0)$	& $Enc(w_{1}^0)$	& $Enc(w_{8}^1)$ &
-						$Enc(w_{0}^0)$	& $Enc(w_{1}^0)$	& $Enc(w_{8}^1)$ \\
+				$w_{4}^0$	& $w_{5}^0$	& $w_{10}^1$	& 
+					$Enc(w_{4}^0)$	& $Enc(w_{5}^0)$	& $Enc(w_{10}^1)$ &
+						$Enc(w_{4}^1)$	& $Enc(w_{5}^0)$	& $Enc(w_{10}^0)$ \\
+			\hline
+			0 & 1 & 0 	&
+				$w_{4}^0$	& $w_{5}^1$	& $w_{10}^0$	& 
+					$Enc(w_{4}^0)$	& $Enc(w_{5}^1)$	& $Enc(w_{10}^0)$ &
+						$Enc(w_{4}^1)$	& $Enc(w_{5}^1)$	& $Enc(w_{10}^1)$ \\
+			\hline
+			1 & 0 & 0 	&
+				$w_{4}^1$	& $w_{5}^0$	& $w_{10}^0$	& 
+					$Enc(w_{4}^1)$	& $Enc(w_{5}^0)$	& $Enc(w_{10}^0)$ &
+						$Enc(w_{4}^0)$	& $Enc(w_{5}^0)$	& $Enc(w_{10}^1)$ \\
+			\hline
+			1 & 1 & 1 	&
+				$w_{4}^1$	& $w_{5}^1$	& $w_{10}^1$	& 
+					$Enc(w_{4}^1)$	& $Enc(w_{5}^1)$	& $Enc(w_{10}^1)$ &
+						$Enc(w_{4}^0)$	& $Enc(w_{5}^1)$	& $Enc(w_{10}^0)$ \\
+			\hline
+		\end{tabular}
+		\end{adjustbox}
+	\end{table}
+
+	\begin{table}
+		\centering
+		\caption{GTT, EGTT, PEGTT for Gate 3}
+		\label{tab:gtt3}
+		\begin{adjustbox}{width=1\textwidth}
+		\begin{tabular}{|c|c|c||c|c|c||c|c|c||c|c|c|}
+			\hline
+			\multicolumn{3}{|c||}{Truth Table} 		& 
+				\multicolumn{3}{|c||}{GTT}			& 
+					\multicolumn{3}{|c||}{EGTT} 		& 
+						\multicolumn{3}{|c|}{PEGTT} \\
+			\hline
+			\hline
+			X & Y & Out	& 
+				X & Y & Out	& 
+					X & Y & Out	& 
+						X & Y & Out	\\
+			\hline
+			0 & 0 & 1 	&
+				$w_{6}^0$	& $w_{7}^0$	& $w_{11}^1$	& 
+					$Enc(w_{6}^0)$	& $Enc(w_{7}^0)$	& $Enc(w_{11}^1)$ &
+						$Enc(w_{6}^1)$	& $Enc(w_{7}^0)$	& $Enc(w_{11}^0)$ \\
+			\hline
+			0 & 1 & 0 	&
+				$w_{6}^0$	& $w_{7}^1$	& $w_{11}^0$	& 
+					$Enc(w_{6}^0)$	& $Enc(w_{7}^1)$	& $Enc(w_{11}^0)$ &
+						$Enc(w_{6}^1)$	& $Enc(w_{7}^1)$	& $Enc(w_{11}^1)$ \\
+			\hline
+			1 & 0 & 0 	&
+				$w_{6}^1$	& $w_{7}^0$	& $w_{11}^0$	& 
+					$Enc(w_{6}^1)$	& $Enc(w_{7}^0)$	& $Enc(w_{11}^0)$ &
+						$Enc(w_{6}^0)$	& $Enc(w_{7}^0)$	& $Enc(w_{11}^1)$ \\
+			\hline
+			1 & 1 & 1 	&
+				$w_{6}^1$	& $w_{7}^1$	& $w_{11}^1$	& 
+					$Enc(w_{6}^1)$	& $Enc(w_{7}^1)$	& $Enc(w_{11}^1)$ &
+						$Enc(w_{6}^0)$	& $Enc(w_{7}^1)$	& $Enc(w_{11}^0)$ \\
+			\hline
+		\end{tabular}
+		\end{adjustbox}
+	\end{table}
+
+	\begin{table}
+		\centering
+		\caption{GTT, EGTT, PEGTT for Gate 4}
+		\label{tab:gtt4}
+		\begin{adjustbox}{width=1\textwidth}
+		\begin{tabular}{|c|c|c||c|c|c||c|c|c||c|c|c|}
+			\hline
+			\multicolumn{3}{|c||}{Truth Table} 		& 
+				\multicolumn{3}{|c||}{GTT}			& 
+					\multicolumn{3}{|c||}{EGTT} 		& 
+						\multicolumn{3}{|c|}{PEGTT} \\
+			\hline
+			\hline
+			X & Y & Out	& 
+				X & Y & Out	& 
+					X & Y & Out	& 
+						X & Y & Out	\\
+			\hline
+			0 & 0 & 0 	&
+				$w_{8}^0$	& $w_{9}^0$	& $w_{12}^0$	& 
+					$Enc(w_{8}^0)$	& $Enc(w_{9}^0)$	& $Enc(w_{12}^0)$ &
+						$Enc(w_{8}^1)$	& $Enc(w_{9}^0)$	& $Enc(w_{12}^0)$ \\
+			\hline
+			0 & 1 & 0 	&
+				$w_{8}^0$	& $w_{9}^1$	& $w_{12}^0$	& 
+					$Enc(w_{8}^0)$	& $Enc(w_{9}^1)$	& $Enc(w_{12}^0)$ &
+						$Enc(w_{8}^1)$	& $Enc(w_{9}^1)$	& $Enc(w_{12}^1)$ \\
+			\hline
+			1 & 0 & 0 	&
+				$w_{8}^1$	& $w_{9}^0$	& $w_{12}^0$	& 
+					$Enc(w_{8}^1)$	& $Enc(w_{9}^0)$	& $Enc(w_{12}^0)$ &
+						$Enc(w_{8}^0)$	& $Enc(w_{9}^0)$	& $Enc(w_{12}^0)$ \\
+			\hline
+			1 & 1 & 1 	&
+				$w_{8}^1$	& $w_{9}^1$	& $w_{12}^1$	& 
+					$Enc(w_{8}^1)$	& $Enc(w_{9}^1)$	& $Enc(w_{12}^1)$ &
+						$Enc(w_{8}^0)$	& $Enc(w_{9}^1)$	& $Enc(w_{12}^0)$ \\
+			\hline
+		\end{tabular}
+		\end{adjustbox}
+	\end{table}
+
+	\begin{table}
+		\centering
+		\caption{GTT, EGTT, PEGTT for Gate 5}
+		\label{tab:gtt5}
+		\begin{adjustbox}{width=1\textwidth}
+		\begin{tabular}{|c|c|c||c|c|c||c|c|c||c|c|c|}
+			\hline
+			\multicolumn{3}{|c||}{Truth Table} 		& 
+				\multicolumn{3}{|c||}{GTT}			& 
+					\multicolumn{3}{|c||}{EGTT} 		& 
+						\multicolumn{3}{|c|}{PEGTT} \\
+			\hline
+			\hline
+			X & Y & Out	& 
+				X & Y & Out	& 
+					X & Y & Out	& 
+						X & Y & Out	\\
+			\hline
+			0 & 0 & 0 	&
+				$w_{10}^0$	& $w_{11}^0$	& $w_{13}^0$	& 
+					$Enc(w_{10}^0)$	& $Enc(w_{11}^0)$	& $Enc(w_{13}^0)$ &
+						$Enc(w_{10}^1)$	& $Enc(w_{11}^0)$	& $Enc(w_{13}^0)$ \\
+			\hline
+			0 & 1 & 0 	&
+				$w_{10}^0$	& $w_{11}^1$	& $w_{13}^0$	& 
+					$Enc(w_{10}^0)$	& $Enc(w_{11}^1)$	& $Enc(w_{13}^0)$ &
+						$Enc(w_{10}^1)$	& $Enc(w_{11}^1)$	& $Enc(w_{13}^1)$ \\
+			\hline
+			1 & 0 & 0 	&
+				$w_{10}^1$	& $w_{11}^0$	& $w_{13}^0$	& 
+					$Enc(w_{10}^1)$	& $Enc(w_{11}^0)$	& $Enc(w_{13}^0)$ &
+						$Enc(w_{10}^0)$	& $Enc(w_{11}^0)$	& $Enc(w_{13}^0)$ \\
+			\hline
+			1 & 1 & 1 	&
+				$w_{10}^1$	& $w_{11}^1$	& $w_{13}^1$	& 
+					$Enc(w_{10}^1)$	& $Enc(w_{11}^1)$	& $Enc(w_{13}^1)$ &
+						$Enc(w_{10}^0)$	& $Enc(w_{11}^1)$	& $Enc(w_{13}^0)$ \\
+			\hline
+		\end{tabular}
+		\end{adjustbox}
+	\end{table}
+
+	\begin{table}
+		\centering
+		\caption{GTT, EGTT, PEGTT for Gate 6}
+		\label{tab:gtt6}
+		\begin{adjustbox}{width=1\textwidth}
+		\begin{tabular}{|c|c|c||c|c|c||c|c|c||c|c|c|}
+			\hline
+			\multicolumn{3}{|c||}{Truth Table} 		& 
+				\multicolumn{3}{|c||}{GTT}			& 
+					\multicolumn{3}{|c||}{EGTT} 		& 
+						\multicolumn{3}{|c|}{PEGTT} \\
+			\hline
+			\hline
+			X & Y & Out	& 
+				X & Y & Out	& 
+					X & Y & Out	& 
+						X & Y & Out	\\
+			\hline
+			0 & 0 & 0 	&
+				$w_{12}^0$	& $w_{13}^0$	& $w_{14}^0$	& 
+					$Enc(w_{12}^0)$	& $Enc(w_{13}^0)$	& $Enc(w_{14}^0)$ &
+						$Enc(w_{12}^1)$	& $Enc(w_{13}^0)$	& $Enc(w_{14}^0)$ \\
+			\hline
+			0 & 1 & 0 	&
+				$w_{12}^0$	& $w_{13}^1$	& $w_{14}^0$	& 
+					$Enc(w_{12}^0)$	& $Enc(w_{13}^1)$	& $Enc(w_{14}^0)$ &
+						$Enc(w_{12}^1)$	& $Enc(w_{13}^1)$	& $Enc(w_{14}^1)$ \\
+			\hline
+			1 & 0 & 0 	&
+				$w_{12}^1$	& $w_{13}^0$	& $w_{14}^0$	& 
+					$Enc(w_{12}^1)$	& $Enc(w_{13}^0)$	& $Enc(w_{14}^0)$ &
+						$Enc(w_{12}^0)$	& $Enc(w_{13}^0)$	& $Enc(w_{14}^0)$ \\
+			\hline
+			1 & 1 & 1 	&
+				$w_{12}^1$	& $w_{13}^1$	& $w_{14}^1$	& 
+					$Enc(w_{12}^1)$	& $Enc(w_{13}^1)$	& $Enc(w_{14}^1)$ &
+						$Enc(w_{12}^0)$	& $Enc(w_{13}^1)$	& $Enc(w_{14}^0)$ \\
 			\hline
 		\end{tabular}
 		\end{adjustbox}
