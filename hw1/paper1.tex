@@ -22,7 +22,7 @@
 
 	Following this, each truth table is replaced with it's corresponding Garbled-Truth-Table (GTT) by replacing each 0 or 1 with $w_k^0$ or $w_k^1$ respectively. The GTT is replaced by the Encrypted-Garbled-Truth-Table (EGTT) which is an encrypted version of the GTT. The encryption is performed by SHA1 hashing $v_i^x \Vert k \Vert x' \Vert y'$ with the plane text $w_k^x$ where $x' = x \oplus p_i$ and  $y' = y \oplus p_j$ and x, y are the entries in the original truth table. This encryption will be represented as $Enc(w_i^j)$. 
 
-	To make the Permutted-Encrypted-Garbled-Truth-Table (PEGTT), the rows in the EGTT have to be swapped based on the following rule: if $p_i = 1$, the first two entries of the table are swapped with the last two entries; if $p_j = 1$, then the first and third are swapped and the second and fourth entries are swapped. The GTT, EGTT, and PEGTT for gate 0 can be found in Table \ref{tab:gtt0}. For gates 1-14, see Tables \ref{tab:gtt1}, \ref{tab:gtt2}, \ref{tab:gtt3}, \ref{tab:gtt4}, \ref{tab:gtt5}, \ref{tab:gtt6}.
+	To make the Permutted-Encrypted-Garbled-Truth-Table (PEGTT), the rows in the EGTT have to be swapped based on the following rule: if $p_i = 1$, the first two entries of the table are swapped with the last two entries; if $p_j = 1$, then the first and third are swapped and the second and fourth entries are swapped. The GTT, EGTT, and PEGTT for gate 0 can be found in Table \ref{tab:gtt0}. For gates 1-6, see Tables \ref{tab:gtt1}, \ref{tab:gtt2}, \ref{tab:gtt3}, \ref{tab:gtt4}, \ref{tab:gtt5}, \ref{tab:gtt6}.
 	
 
 	\begin{figure}
