@@ -577,7 +577,23 @@
 			\hline
 		\end{tabular}
 	\end{table}
-		
+	
+	\section{Show how the evaluator knows which entry in the garbled circuit can be decrypted correctly.}
+	In a 1-2 OT, Bob has two messages $m_0$ and $m_1$ and Alice has a bit b. Alice wants to retrieve $m_b$, without Bob knowing b.
+
+	\begin{enumerate}
+  		\item Bob sends N, e, $x_0$, and $x_1$ to Alice, i.e. $x_0$, $x_1$ are randomly chosen from ${1, ..., N-1}$. (Bob also knows the private key $d$)
+  		\item Alice randomly selects $k \in {1,...,N-1}$
+  		\item Alice sends $v = (k^e mod N) \oplus x_b$ to Bob
+  		\item Bob computes $k_0 = (v \oplus x_0)^d mod N = k$. $k_1 = (v \oplus x_1)^d mod N = k$, i.e. $k^e \oplus x_0 \oplus x_0 \Rightarrow k$ and $k^e \oplus x_1 \oplus x_0 \Rightarrow k’$
+  		\item Bob sends  $z_0 = m_0 \oplus k_0 = m_0 \oplus k$ and $z_1 = m_1 \oplus k_1 = m_0 \oplus k’$ to Alice
+  		\item Alice computes $m_b = z_b \oplus k$, i.e. Alice is only able to retrieve one value of either $x_0$ or $x_1$ while knowing k
+
+	\end{enumerate}
+
+	\section{What is the appropriate key size for constructing the garbled circuit?}
+	“Fairplay - A Secure Two-Party Computation System” used 80 bits for the key size(it means key size as in size of v’s generated right?). However that alone doesn’t mean the key size is appropriate. The key needs to be large enough to firstly, mask a given input to the circuit. Given the examples in the paper only used inputs of 1 bit, this isn’t an issue for those circuits. The other concern when deciding a key size is to make brute force guessing of the keys or other attacks impractical. Now the necessary size to combat this is debatable and always changing with advancements in hardware and theory, but in regards to papers given 80 bits should suffice.
+	
 	
 		
 \end{document}
