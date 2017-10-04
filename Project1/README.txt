@@ -1,20 +1,21 @@
-Only file I made was millionaireProblem.cir
-To run it either type ./runparserrandom circuitfile.cir
-to run with input files ./runtestgcparser circuitfile.cir inputfile
-For more details see given readme
-
 readme for wei
-First gcparser must be downloaded and java installed
+First gcparser must be downloaded
 It can be downloaded directly from
 http://mightbeevil.org/gcparser/
 or 
 https://github.com/wrmelicher/GCParser
-Then you can use our given circuit file to securely compute millionare problem
-To run use script given in GCParser
-runparserrandom runs the circuit with random input
-runtestgcparser runs the circuit with inputs from a given input file
-we provide two sample input files one with first party greater one with second
-to define your own input change values in either of the given files
+Additionally we expect java and python3 to be installed
 
-results are displayed and piped into GCParser/results as siclientout and
-siserverout.
+We provide a h1Circuit generator which takes inputs and generates and runs circuit file
+to solve the millionaire's problem securely
+
+To run python h1CircuitGenerator /full/path/toGCParser/install/GCParser numberOfBitsForEachPartyInput
+Party1Input Party2Input
+
+This will generate the millionaireCircuit.cir Party1InputFile Party2InputFile
+
+Then the program runs GCParser with generated files via the runCircuit script.
+The results will be piped into ./results/siclientout ./results/siserverout
+
+The result files have a variable firstpartygreater which is 1 if first party input is greater
+than the second party input

@@ -1,0 +1,11 @@
+#!/bin/bash
+GCPATH="$1"
+INFILE="$2"
+SERVER="$3"
+CLIENT="$4"
+
+java -ea -cp $GCPATH/dist/GCParser.jar:$GCPATH/extlibs/jargs.jar:$GCPATH/extlibs/commons-io-1.4.jar Test.TestGCParserServer -f "$INFILE" -p "$SERVER" -w 80 > ./results/siserverout &
+
+sleep 0.8
+
+java -ea -cp $GCPATH/dist/GCParser.jar:$GCPATH/extlibs/commons-io-1.4.jar:$GCPATH/extlibs/jargs.jar Test.TestGCParserClient -f "$INFILE" -p "$CLIENT" --server localhost -r 1 > ./results/siclientout &

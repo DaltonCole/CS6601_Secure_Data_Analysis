@@ -1,0 +1,10 @@
+Time (ms) Starting program: 1507152215096 (0.0, 0.0)
+waiting for client to connect
+client has connected
+1
+Elapsed time (ms) on circuit preparation: 1515 (0.009765625, 0.009765625)
+Elapsed time (ms) on OT preparation: 1296 (13.103515625, 8.97265625)
+Elapsed time (ms) on transfer inputs: 157 (1.9033203125, 7.828125)
+Elapsed time (ms) on execution of circuit: 27 (2.0, 0.0)
+output: 
+firstPartyGreater = 1
