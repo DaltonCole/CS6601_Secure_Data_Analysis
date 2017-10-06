@@ -24,5 +24,5 @@ python3 h1CircuitGenerator.py /full/path/toGCParser/install/GCParser numberOfBit
 
 # Example
 ```
-python3 h1CircuitGenerator.py ./GCParser 4 10 11
+python3 h1CircuitGenerator.py /home/user/downloads/GCParser 4 10 11
 ```
