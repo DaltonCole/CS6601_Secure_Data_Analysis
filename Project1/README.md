@@ -13,9 +13,14 @@
 
 # How to Run
 	* We provide a h1Circuit generator which takes inputs, generates and then runs the circuit circuit file to solve the millionaire's problem securely
-	* To run :
+	* To run:
 ```
-python h1CircuitGenerator /full/path/toGCParser/install/GCParser numberOfBitsForEachPartyInput Party1Input Party2Input
+python3 h1CircuitGenerator /full/path/toGCParser/install/GCParser numberOfBitsForEachPartyInput Party1Input Party2Input
 ```
 		* This will generate the millionaireCircuit.cir Party1InputFile Party2InputFile. Then the program runs GCParser with generated files via the runCircuit script. The results will be piped into ./results/siclientout ./results/siserverout
 		* The result files have a variable firstpartygreater which is 1 if first party input is greater than the second party input
+
+# Example
+```
+python3 h1CircuitGenerator ./GCParser/runtestgcparser 4 10 11
+```

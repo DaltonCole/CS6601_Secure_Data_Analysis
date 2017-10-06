@@ -1,0 +1,6 @@
+.input a 1 64
+.input b 2 64
+
+.output firstPartyGreater
+
+firstPartyGreater gts a b
