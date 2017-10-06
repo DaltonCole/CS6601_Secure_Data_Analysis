@@ -1,0 +1,25 @@
+\documentclass[times]{article}
+
+\usepackage[margin=1.0in]{geometry}
+\usepackage{graphicx}
+\usepackage{adjustbox}
+\usepackage{float}
+\usepackage{placeins}
+\usepackage[none]{hyphenat}
+\usepackage{amsmath}
+\usepackage[us]{datetime}
+\usepackage[explicit]{titlesec}
+%\titleformat{\section}{\normalfont}{}{0em}{\textbf{\large Problem  \thesection}\  \normalsize #1}
+\begin{document}
+	\title{CS 6601 Secure Data Analysis - Fall 2017 \\ Project 1 \\ Millionaire Problem using Garbled Circuits}
+	\author{Adam Bowers \\ Sammie Bush \\ Dalton Cole}
+	\date{\formatdate{6}{10}{2017}}
+	\maketitle
+
+	\section{Implementation}
+	Our main worker for this project is the \textit{h1Circuit.py} script. What this script does is create the input files for GCParser. The needed input files are: \textit{millionaireCircuit.cir}, \textit{partyOneInputFile}, and \textit{partyTwoInputFile}. The purpose of these files are: the main input file, the client's input, and the server's input, respectively. 
+	
+	All results of the experiment can be seen in the result's directory. The \textit{siclientout} and \textit{siserverout} correspond party 1 and party 2, respectively. 
+
+	
+\end{document}

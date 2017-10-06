@@ -1,6 +1,5 @@
-#Python file to generate circuit file
-#to compute secure dot product given number of terms
-#and number of bits of each term
+# Python file to generate circuit file to compute secure dot product
+# given number of terms and number of bits of each term.
 
 import sys
 import os

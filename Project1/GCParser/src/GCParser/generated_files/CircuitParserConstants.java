@@ -11,41 +11,41 @@ public interface CircuitParserConstants {
   /** End of File. */
   int EOF = 0;
   /** RegularExpression Id. */
-  int COMMENT = 4;
+  int COLON = 4;
   /** RegularExpression Id. */
-  int INPUT_MARK = 5;
+  int PERIOD = 5;
   /** RegularExpression Id. */
-  int OUTPUT_MARK = 6;
+  int COMMA = 6;
   /** RegularExpression Id. */
-  int START_PARTY = 7;
+  int LINE_ENDING = 7;
   /** RegularExpression Id. */
-  int END_PARTY = 8;
+  int OPEN_PAREN = 8;
   /** RegularExpression Id. */
-  int SIGNED_MARK = 9;
+  int CLOSE_PAREN = 9;
   /** RegularExpression Id. */
-  int UNSIGNED_MARK = 10;
+  int INPUT_MARK = 10;
   /** RegularExpression Id. */
-  int LINE_ENDING = 11;
+  int OUTPUT_MARK = 11;
   /** RegularExpression Id. */
-  int INCLUDE = 12;
+  int SIGNED_MARK = 12;
   /** RegularExpression Id. */
-  int PATH = 13;
+  int INCLUDE = 13;
   /** RegularExpression Id. */
-  int OPEN_PAREN = 14;
+  int VERSION = 14;
   /** RegularExpression Id. */
-  int CLOSE_PAREN = 15;
+  int UNSIGNED_MARK = 15;
   /** RegularExpression Id. */
-  int COLON = 16;
+  int START_PARTY = 16;
   /** RegularExpression Id. */
-  int COMMA = 17;
+  int END_PARTY = 17;
   /** RegularExpression Id. */
-  int IDENTIFIER = 18;
+  int PATH = 18;
   /** RegularExpression Id. */
-  int INTEGER = 19;
+  int IDENTIFIER = 19;
   /** RegularExpression Id. */
-  int DIGITS = 20;
+  int INTEGER = 20;
   /** RegularExpression Id. */
-  int LETTER = 21;
+  int COMMENT = 21;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -56,24 +56,24 @@ public interface CircuitParserConstants {
     "\" \"",
     "\"\\t\"",
     "\"\\r\"",
-    "<COMMENT>",
-    "\".input\"",
-    "\".output\"",
-    "\".startparty\"",
-    "\".endparty\"",
-    "\"signed\"",
-    "\"unsigned\"",
+    "\":\"",
+    "\".\"",
+    "\",\"",
     "\"\\n\"",
-    "\".include\"",
-    "<PATH>",
     "\"(\"",
     "\")\"",
-    "\":\"",
-    "\",\"",
+    "\".input\"",
+    "\".output\"",
+    "\"signed\"",
+    "\".include\"",
+    "\".version\"",
+    "\"unsigned\"",
+    "\".startparty\"",
+    "\".endparty\"",
+    "<PATH>",
     "<IDENTIFIER>",
     "<INTEGER>",
-    "<DIGITS>",
-    "<LETTER>",
+    "<COMMENT>",
   };
 
 }

@@ -1,5 +1,5 @@
-.input a 1 4
-.input b 2 4
+.input a 1 2
+.input b 2 2
 
 .output firstPartyGreater
 

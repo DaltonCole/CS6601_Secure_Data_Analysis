@@ -10,6 +10,9 @@
 
     private Variable_Context context;
 
+    private int major_version;
+    private int minor_version;
+
     private int lineNumber;
     private boolean errors;
     private int partyComp = Input_Variable.ALL;
@@ -126,36 +129,37 @@
 
   final public void GarbledCircuit() throws ParseException, CircuitDescriptionException, FileNotFoundException, IOException {
   OperationNameResolver.initOperations();
+    Version_Line();
     label_1:
     while (true) {
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case COMMENT:
-      case INPUT_MARK:
-      case LINE_ENDING:
-        ;
-        break;
-      default:
-        jj_la1[0] = jj_gen;
-        break label_1;
-      }
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case INPUT_MARK:
         InputLine();
         break;
       default:
-        jj_la1[1] = jj_gen;
+        jj_la1[0] = jj_gen;
         ;
       }
       LineEnding();
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case LINE_ENDING:
+      case INPUT_MARK:
+      case COMMENT:
+        ;
+        break;
+      default:
+        jj_la1[1] = jj_gen;
+        break label_1;
+      }
     }
     OutputLine();
     LineEnding();
     label_2:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case COMMENT:
-      case OUTPUT_MARK:
       case LINE_ENDING:
+      case OUTPUT_MARK:
+      case COMMENT:
         ;
         break;
       default:
@@ -176,8 +180,8 @@
     label_3:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case COMMENT:
       case LINE_ENDING:
+      case COMMENT:
         ;
         break;
       default:
@@ -186,9 +190,9 @@
       }
       LineEnding();
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case INCLUDE:
       case START_PARTY:
       case END_PARTY:
-      case INCLUDE:
       case IDENTIFIER:
         Calculation();
         break;
@@ -205,13 +209,31 @@
     }
   }
 
+  final public void Version_Line() throws ParseException {
+  int major = 1;
+  int minor = 0;
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case VERSION:
+      jj_consume_token(VERSION);
+      major = IntDigits();
+      jj_consume_token(PERIOD);
+      minor = IntDigits();
+      break;
+    default:
+      jj_la1[6] = jj_gen;
+      ;
+    }
+    major_version = major;
+    minor_version = minor;
+  }
+
   final public void LineEnding() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case COMMENT:
       jj_consume_token(COMMENT);
       break;
     default:
-      jj_la1[6] = jj_gen;
+      jj_la1[7] = jj_gen;
       ;
     }
     jj_consume_token(LINE_ENDING);
@@ -254,13 +276,13 @@
       isSigned = false;
         break;
       default:
-        jj_la1[7] = jj_gen;
+        jj_la1[8] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
       break;
     default:
-      jj_la1[8] = jj_gen;
+      jj_la1[9] = jj_gen;
       ;
     }
     context.addOutput(outid, isSigned );
@@ -279,7 +301,7 @@
       PartyChange();
       break;
     default:
-      jj_la1[9] = jj_gen;
+      jj_la1[10] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -309,7 +331,7 @@
       partyComp = Input_Variable.ALL;
       break;
     default:
-      jj_la1[10] = jj_gen;
+      jj_la1[11] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -346,7 +368,7 @@
         ;
         break;
       default:
-        jj_la1[11] = jj_gen;
+        jj_la1[12] = jj_gen;
         break label_4;
       }
       temp = VariableInput();
@@ -384,16 +406,16 @@
       case COLON:
         jj_consume_token(COLON);
         bits = IntDigits();
-      var = new Constant_Variable( num.toString(), lineNumber, num, bits );
+        var = new Constant_Variable( num.toString(), lineNumber, num, bits );
         break;
       default:
-        jj_la1[12] = jj_gen;
+        jj_la1[13] = jj_gen;
         ;
       }
       {if (true) return var;}
       break;
     default:
-      jj_la1[13] = jj_gen;
+      jj_la1[14] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -443,7 +465,7 @@
         ;
         break;
       default:
-        jj_la1[14] = jj_gen;
+        jj_la1[15] = jj_gen;
         break label_5;
       }
       to = Identifier();
@@ -454,7 +476,7 @@
         jj_consume_token(COMMA);
         break;
       default:
-        jj_la1[15] = jj_gen;
+        jj_la1[16] = jj_gen;
         ;
       }
       ans.put( to, from );
@@ -476,7 +498,7 @@
         ;
         break;
       default:
-        jj_la1[16] = jj_gen;
+        jj_la1[17] = jj_gen;
         break label_6;
       }
       to = Identifier();
@@ -487,7 +509,7 @@
         jj_consume_token(COMMA);
         break;
       default:
-        jj_la1[17] = jj_gen;
+        jj_la1[18] = jj_gen;
         ;
       }
       ans.put( to, from );
@@ -506,13 +528,13 @@
   public Token jj_nt;
   private int jj_ntk;
   private int jj_gen;
-  final private int[] jj_la1 = new int[18];
+  final private int[] jj_la1 = new int[19];
   static private int[] jj_la1_0;
   static {
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x830,0x20,0x850,0x40,0x810,0x41180,0x10,0x600,0x600,0x41180,0x180,0xc0000,0x10000,0xc0000,0x40000,0x20000,0x40000,0x20000,};
+      jj_la1_0 = new int[] {0x400,0x200480,0x200880,0x800,0x200080,0xb2000,0x4000,0x200000,0x9000,0x9000,0xb2000,0x30000,0x180000,0x10,0x180000,0x80000,0x40,0x80000,0x40,};
    }
 
   /** Constructor with InputStream. */
@@ -526,7 +548,7 @@
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 18; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 19; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -540,7 +562,7 @@
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 18; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 19; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -550,7 +572,7 @@
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 18; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 19; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -560,7 +582,7 @@
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 18; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 19; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -569,7 +591,7 @@
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 18; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 19; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -578,7 +600,7 @@
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 18; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 19; i++) jj_la1[i] = -1;
   }
 
   private Token jj_consume_token(int kind) throws ParseException {
@@ -634,7 +656,7 @@
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 18; i++) {
+    for (int i = 0; i < 19; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
