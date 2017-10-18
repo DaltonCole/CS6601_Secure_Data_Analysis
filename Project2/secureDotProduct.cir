@@ -1,9 +1,9 @@
-.input party1a0 1 4
-.input party1a1 1 4
-.input party1a2 1 4
-.input party2b0 2 4
-.input party2b1 2 4
-.input party2b2 2 4
+.input party1a0 1 10
+.input party1a1 1 10
+.input party1a2 1 10
+.input party2b0 2 10
+.input party2b1 2 10
+.input party2b2 2 10
 
 .output sum10
 

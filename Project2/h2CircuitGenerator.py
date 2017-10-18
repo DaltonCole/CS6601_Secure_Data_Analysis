@@ -39,6 +39,8 @@ def main():
 			max_input = max(max_input, i)
 	while(pow(2, numBitsForInput) - 1 < max_input):
 		numBitsForInput += 1
+	numBitsForInput *= 2
+	numBitsForInput += len(data['party1']) - 1
 
 	# File names
 	outFileName = "secureDotProduct.cir"
