@@ -1,42 +1,87 @@
-.input party1Term0 1 2
-.input party2Term0 2 2
-.input party1Term1 1 2
-.input party2Term1 2 2
+.input party1Term0 1 5
+.input party2Term0 2 5
+.input party1Term1 1 5
+.input party2Term1 2 5
+.input party1Term2 1 5
+.input party2Term2 2 5
 
-.output finalResult1
+.output finalResult2
 
-aformattedparty2Term0 sextend party2Term0 4
 acurBit0 select party1Term0 0 1
-acurBitExt0 sextend acurBit0 2
-aadditionResult0a select acurBitExt0 0 2
-aadditionResult0b add aadditionResult0a acurBitExt0
-aadditionResult0c and aadditionResult0b party2Term0
-amultiplicationResult0 sextend aadditionResult0c 4
+acurBitExt0 concat acurBit0 acurBit0 acurBit0 acurBit0 acurBit0 
+aadditionResult0f and acurBitExt0 party2Term0
+amultiplicationResult0 concat 0:5 aadditionResult0f
 acurBit1 select party1Term0 1 2
-acurBitExt1 sextend acurBit1 2
-aadditionResult1a select acurBitExt1 0 2
-aadditionResult1b add aadditionResult1a acurBitExt1
-aadditionResult1c and aadditionResult1b party2Term0
-aadditionResultShifted1c zextend  aadditionResult1c 3
-aadditionResultFinal1c sextend aadditionResultShifted1c 4
-amultiplicationResult1 add amultiplicationResult0 aadditionResultFinal1c
-finalResultInter0 select amultiplicationResult1 0 4
-finalResult0 sextend finalResultInter0 6
-bformattedparty2Term1 sextend party2Term1 4
+acurBitExt1 concat acurBit1 acurBit1 acurBit1 acurBit1 acurBit1 
+aadditionResult1f and acurBitExt1 party2Term0
+aadditionResultFinal1f concat 0:4 aadditionResult1f 0:1
+amultiplicationResult1 add amultiplicationResult0 aadditionResultFinal1f
+acurBit2 select party1Term0 2 3
+acurBitExt2 concat acurBit2 acurBit2 acurBit2 acurBit2 acurBit2 
+aadditionResult2f and acurBitExt2 party2Term0
+aadditionResultFinal2f concat 0:3 aadditionResult2f 0:2
+amultiplicationResult2 add amultiplicationResult1 aadditionResultFinal2f
+acurBit3 select party1Term0 3 4
+acurBitExt3 concat acurBit3 acurBit3 acurBit3 acurBit3 acurBit3 
+aadditionResult3f and acurBitExt3 party2Term0
+aadditionResultFinal3f concat 0:2 aadditionResult3f 0:3
+amultiplicationResult3 add amultiplicationResult2 aadditionResultFinal3f
+acurBit4 select party1Term0 4 5
+acurBitExt4 concat acurBit4 acurBit4 acurBit4 acurBit4 acurBit4 
+aadditionResult4f and acurBitExt4 party2Term0
+aadditionResultFinal4f concat 0:1 aadditionResult4f 0:4
+amultiplicationResult4 add amultiplicationResult3 aadditionResultFinal4f
+finalResultInter0 select amultiplicationResult4 0 10
+finalResult0 concat 0:4 amultiplicationResult4
 bcurBit0 select party1Term1 0 1
-bcurBitExt0 sextend bcurBit0 2
-badditionResult0a select bcurBitExt0 0 2
-badditionResult0b add badditionResult0a bcurBitExt0
-badditionResult0c and badditionResult0b party2Term1
-bmultiplicationResult0 sextend badditionResult0c 4
+bcurBitExt0 concat bcurBit0 bcurBit0 bcurBit0 bcurBit0 bcurBit0 
+badditionResult0f and bcurBitExt0 party2Term1
+bmultiplicationResult0 concat 0:5 badditionResult0f
 bcurBit1 select party1Term1 1 2
-bcurBitExt1 sextend bcurBit1 2
-badditionResult1a select bcurBitExt1 0 2
-badditionResult1b add badditionResult1a bcurBitExt1
-badditionResult1c and badditionResult1b party2Term1
-badditionResultShifted1c zextend  badditionResult1c 3
-badditionResultFinal1c sextend badditionResultShifted1c 4
-bmultiplicationResult1 add bmultiplicationResult0 badditionResultFinal1c
-finalResultInter1 select bmultiplicationResult1 0 4
-finalResultInterExt1 sextend finalResultInter1 6
+bcurBitExt1 concat bcurBit1 bcurBit1 bcurBit1 bcurBit1 bcurBit1 
+badditionResult1f and bcurBitExt1 party2Term1
+badditionResultFinal1f concat 0:4 badditionResult1f 0:1
+bmultiplicationResult1 add bmultiplicationResult0 badditionResultFinal1f
+bcurBit2 select party1Term1 2 3
+bcurBitExt2 concat bcurBit2 bcurBit2 bcurBit2 bcurBit2 bcurBit2 
+badditionResult2f and bcurBitExt2 party2Term1
+badditionResultFinal2f concat 0:3 badditionResult2f 0:2
+bmultiplicationResult2 add bmultiplicationResult1 badditionResultFinal2f
+bcurBit3 select party1Term1 3 4
+bcurBitExt3 concat bcurBit3 bcurBit3 bcurBit3 bcurBit3 bcurBit3 
+badditionResult3f and bcurBitExt3 party2Term1
+badditionResultFinal3f concat 0:2 badditionResult3f 0:3
+bmultiplicationResult3 add bmultiplicationResult2 badditionResultFinal3f
+bcurBit4 select party1Term1 4 5
+bcurBitExt4 concat bcurBit4 bcurBit4 bcurBit4 bcurBit4 bcurBit4 
+badditionResult4f and bcurBitExt4 party2Term1
+badditionResultFinal4f concat 0:1 badditionResult4f 0:4
+bmultiplicationResult4 add bmultiplicationResult3 badditionResultFinal4f
+finalResultInterExt1 concat  0:4 bmultiplicationResult4
 finalResult1 add finalResult0 finalResultInterExt1
+ccurBit0 select party1Term2 0 1
+ccurBitExt0 concat ccurBit0 ccurBit0 ccurBit0 ccurBit0 ccurBit0 
+cadditionResult0f and ccurBitExt0 party2Term2
+cmultiplicationResult0 concat 0:5 cadditionResult0f
+ccurBit1 select party1Term2 1 2
+ccurBitExt1 concat ccurBit1 ccurBit1 ccurBit1 ccurBit1 ccurBit1 
+cadditionResult1f and ccurBitExt1 party2Term2
+cadditionResultFinal1f concat 0:4 cadditionResult1f 0:1
+cmultiplicationResult1 add cmultiplicationResult0 cadditionResultFinal1f
+ccurBit2 select party1Term2 2 3
+ccurBitExt2 concat ccurBit2 ccurBit2 ccurBit2 ccurBit2 ccurBit2 
+cadditionResult2f and ccurBitExt2 party2Term2
+cadditionResultFinal2f concat 0:3 cadditionResult2f 0:2
+cmultiplicationResult2 add cmultiplicationResult1 cadditionResultFinal2f
+ccurBit3 select party1Term2 3 4
+ccurBitExt3 concat ccurBit3 ccurBit3 ccurBit3 ccurBit3 ccurBit3 
+cadditionResult3f and ccurBitExt3 party2Term2
+cadditionResultFinal3f concat 0:2 cadditionResult3f 0:3
+cmultiplicationResult3 add cmultiplicationResult2 cadditionResultFinal3f
+ccurBit4 select party1Term2 4 5
+ccurBitExt4 concat ccurBit4 ccurBit4 ccurBit4 ccurBit4 ccurBit4 
+cadditionResult4f and ccurBitExt4 party2Term2
+cadditionResultFinal4f concat 0:1 cadditionResult4f 0:4
+cmultiplicationResult4 add cmultiplicationResult3 cadditionResultFinal4f
+finalResultInterExt2 concat  0:4 cmultiplicationResult4
+finalResult2 add finalResult1 finalResultInterExt2
