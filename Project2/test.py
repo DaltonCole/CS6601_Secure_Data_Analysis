@@ -15,31 +15,35 @@ def generateMultiplicationforNBitNumbers(term1,term2,numBits,maxNeededBits,run):
         curLoop =str(i)
         text = text + run+ "curBit"+curLoop+" select "+ term1+" "+ str(i)+" "+str(i+1)+"\n"
         #now extend for 8 additions
-        text+= run+"curBitExt"+curLoop+" sextend "+run+"curBit"+curLoop+" "+str(maxNeededBits)+"\n"
+        text+= run+"curBitExt"+curLoop+" sextend "+run+"curBit"+curLoop+" "+str(numBits)+"\n"
         #now have to add curBit to itself numbits time
         for k in range(0,numBits):
             if (k == 0):
-                text += run+"additionResult"+curLoop+chr(ord('a') +k)+" select "+run+"curBitExt"+curLoop+" 0" + " " + str(maxNeededBits) + "\n"
+                text += run+"additionResult"+curLoop+chr(ord('a') +k)+" select "+run+"curBitExt"+curLoop+" 0" + " " + str(numBits) + "\n"
             else:
                 text += run+"additionResult"+curLoop+chr(ord('a') +k)+" add " +run+"additionResult"+curLoop+chr(ord('a') +(k-1))\
                         + " "+run+"curBitExt"+curLoop+"\n"
-        text+=  run+"additionResult"+curLoop+chr(ord('a') +numBits)+" and "+run+"additionResult"+curLoop+chr(ord('a') +(numBits-1))\
-                +" "+run+"formatted"+term2+"\n"
+        text+=  run+"additionResult"+curLoop+chr(ord('a') +numBits)+" and " +run+"additionResult"+curLoop+chr(ord('a') +(numBits-1)) \
+                + " " +term2 + "\n"
         if(i==0):
             text+= run+"multiplicationResult"+curLoop+" sextend "+run+"additionResult"+curLoop+chr(ord('a') +numBits)\
                    +" "+str(maxNeededBits)+"\n"
         else:
             #shift left by i and
+            text+= run + "additionResultShifted" + curLoop+chr(ord('a')+numBits) +" zextend "+" "+run + "additionResult"+ \
+                   curLoop + chr(ord('a') + numBits)+ " "+str(numBits+i) +"\n"
+            text+= run + "additionResultFinal" + curLoop+chr(ord('a')+numBits) + " sextend "+ \
+                   run + "additionResultShifted" + curLoop + chr(ord('a') + numBits) + " "+str(maxNeededBits) + "\n"
             #we add i zeroes then make sure same length for addition
             text+= run+"multiplicationResult"+curLoop+" add "+run+"multiplicationResult"+str(i-1)+\
-                   " "+run + "additionResult" + curLoop + chr(ord('a') + numBits)+"\n"
+                   " "+run + "additionResultFinal" + curLoop+ chr(ord('a') + numBits)+"\n"
 
     return text
 
 
 def main():
-    numBitsForInput = 3
-    numTerms = 3
+    numBitsForInput = 2
+    numTerms = 2
     outText = ""
     maxNeededMultiplicationBits = 2*numBitsForInput
     maxNeededSumBits = maxNeededMultiplicationBits+int(math.ceil(math.log(maxNeededMultiplicationBits,2)))

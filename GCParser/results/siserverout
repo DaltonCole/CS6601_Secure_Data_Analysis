@@ -1,4 +1,10 @@
-Time (ms) Starting program: 1507266635961 (0.0, 0.0)
+Time (ms) Starting program: 1508426338870 (0.0, 0.0)
 waiting for client to connect
 client has connected
- (No such file or directory)...Exiting
+1
+Elapsed time (ms) on circuit preparation: 1486 (0.009765625, 0.009765625)
+Elapsed time (ms) on OT preparation: 1360 (13.1044921875, 8.97265625)
+Elapsed time (ms) on transfer inputs: 149 (0.18359375, 6.72265625)
+Elapsed time (ms) on execution of circuit: 24 (0.40625, 0.0)
+output: 
+finalResult1 = 60
