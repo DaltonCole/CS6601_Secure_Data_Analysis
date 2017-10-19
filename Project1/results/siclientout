@@ -1,0 +1,10 @@
+Time (ms) Starting program: 1508359790243 (0.0, 0.0)
+1
+Elapsed time (ms) on circuit preparation: 594 (0.0, 0.0)
+Time (ms) right before NPOT public key generation: 1508359790918 (0.0, 0.0)
+Elapsed time (ms) on NPOT public key generation: 390 (0.0, 0.0)
+Elapsed time (ms) on OT preparation: 832 (0.0, 0.0)
+Elapsed time (ms) on transfer inputs: 142 (0.0, 0.0)
+Elapsed time (ms) on execution of circuit: 118 (0.0, 0.0)
+output: 
+firstPartyGreater = 1

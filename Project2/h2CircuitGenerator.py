@@ -20,7 +20,7 @@ def main():
 	if(len(sys.argv)!= 3):
 		print('Usage: python3 h2CircuitGenerator.py config.json <GCParser location>')
 		return
-
+	print("starting")
 	# Json dictionary of {party1: [ints], party2: [ints]}
 	data = {}
 	with open(sys.argv[1], 'r') as data_file:    
@@ -94,11 +94,11 @@ def main():
 		f.write(outText)
 
 	with open(outInput1FileName, 'w') as f:
-		f.write(party1outText)
-
-	with open(outInput2FileName, 'w') as f:
 		f.write(party2outText)
 
+	with open(outInput2FileName, 'w') as f:
+		f.write(party1outText)
+	print(" running " +"./runCircuit " + sys.argv[2] + " ./" + outFileName + " ./" + outInput1FileName + " ./" + outInput2FileName)
 	os.system("./runCircuit " + sys.argv[2] + " ./" + outFileName + " ./" + outInput1FileName + " ./" + outInput2FileName)
 
 
