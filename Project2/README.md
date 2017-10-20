@@ -15,8 +15,9 @@
 
 # How to Run
 	* We provide a h2Circuit generator which takes in a config.json and the GCParser location to generates and then run the circuit file. This does a threshold based secure dot product on the inputs supplied in the config.json.
-	* To run:
+	
 ```
+To Run:
 python3 h2CircuitGenerator.py config.json [GCParser location]
 ```
 		* This will generate secureDotProduct.cir, PartyOneInputFile.cir, and PartyTwoInputFile.cir. Then, the program runs GCParser with generated files via the runCircuit script. The results will be piped into ./results/siclientout ./results/siserverout
