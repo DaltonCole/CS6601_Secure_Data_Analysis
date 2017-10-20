@@ -42,6 +42,9 @@ def main():
 	numBitsForInput *= 2
 	numBitsForInput += len(data['party1']) - 1
 
+	generateCircuitForFile(data['threshold'], "secureDotProduct.cir", numBitsForInput, len(data['party1']))
+
+	"""
 	# File names
 	outFileName = "secureDotProduct.cir"
 	outInput1FileName = "partyOneInputFile"
@@ -100,7 +103,7 @@ def main():
 		f.write(party1outText)
 	print(" running " +"./runCircuit " + sys.argv[2] + " ./" + outFileName + " ./" + outInput1FileName + " ./" + outInput2FileName)
 	os.system("./runCircuit " + sys.argv[2] + " ./" + outFileName + " ./" + outInput1FileName + " ./" + outInput2FileName)
-
+	"""
 
 if __name__ == "__main__":
 	main()
