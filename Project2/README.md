@@ -34,10 +34,14 @@ python3 h2CircuitGenerator.py [Configuration json file location] [GCParser locat
 	* This will generate secureDotProduct.cir, PartyOneInputFile, and PartyTwoInputFile. Then, the program runs GCParser with generated files via the runCircuit script. The results will be piped into ./results/siclientout ./results/siserverout
 	* The result files have a variable greaterOrEqualToT which is 1 if the dot product is greater than t and 0 if the dot product is less than t.
 	* Furthermore, if the script won't run due to premission errors or whatever else you can copy secureDotProduct.cir, PartyOneInputFile, and PartyTwoInputFile to your GC installation and run the circuit with their script
+Note if results wont run
+try chomd +x runCircuit before running python3 or run as sudo
+also to easly see result after run
+cat results/*
 # Examples
 Command:
 ```
-python3 h2CircuitGenerator.py config.json ./
+python3 h2CircuitGenerator.py config.json /Path/To/GCParser/
 ```
 
 config.json:
