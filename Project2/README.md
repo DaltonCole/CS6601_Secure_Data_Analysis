@@ -6,7 +6,7 @@
 
 # System Requirements
 	* Linux is the expected operating system
-		* Can run on Windows, but path information will be different
+		* Windows not supported
 	* gcparser must be downloaded
 		* It can be downloaded directly from:
 			* http://mightbeevil.org/gcparser/ 
@@ -32,7 +32,9 @@ python3 h2CircuitGenerator.py config.json ./
 config.json:
 ```
 {
-  "party1": "2,4,6",
-  "party2": "1,3,8"
+  "t": "55340232195358851075",
+  "numBitsForInput" :"32",
+  "party1": "1,1,1",
+  "party2": "4294967295,4294967295,4294967295"
 }
 ```
