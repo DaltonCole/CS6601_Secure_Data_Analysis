@@ -1,4 +1,4 @@
-# Project 1 - Millionaire Problem using Garbled Circuits
+# Project 2 - Implementing the Threshold based SecureDot Product Protocol using FastGC
 * Programmers:
 	* Adam Bowers
 	* Sammie Bush
@@ -14,15 +14,23 @@
 	* Java and Python3 to be installed
 
 # How to Run
-	* We provide a h1Circuit generator which takes inputs, generates and then runs the circuit circuit file to solve the millionaire's problem securely
+	* We provide a h2Circuit generator which takes in a config.json and the GCParser location to generates and then run the circuit file. This does a threshold based secure dot product on the inputs supplied in the config.json.
 	* To run:
 ```
-python3 h1CircuitGenerator.py /full/path/toGCParser/install/GCParser numberOfBitsForEachPartyInput Party1Input Party2Input
+python3 h2CircuitGenerator.py config.json [GCParser location]
 ```
-		* This will generate the millionaireCircuit.cir Party1InputFile Party2InputFile. Then the program runs GCParser with generated files via the runCircuit script. The results will be piped into ./results/siclientout ./results/siserverout
-		* The result files have a variable firstpartygreater which is 1 if first party input is greater than the second party input
+		* This will generate secureDotProduct.cir, PartyOneInputFile.cir, and PartyTwoInputFile.cir. Then, the program runs GCParser with generated files via the runCircuit script. The results will be piped into ./results/siclientout ./results/siserverout
+		* The result files have a variable greaterOrEqualToT which is 1 if the dot product is greater than t and 0 if the dot product is less than t.
 
-# Example
+# Examples
 ```
-python3 h1CircuitGenerator.py /home/user/downloads/GCParser 4 10 11
+Command:
+python3 h2CircuitGenerator.py config.json ./
+
+config.json:
+{
+  "party1": "2,4,6",
+  "party2": "1,3,8"
+}
+
 ```
