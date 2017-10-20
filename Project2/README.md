@@ -18,7 +18,7 @@
 	
 ```
 To Run:
-python3 h2CircuitGenerator.py config.json [GCParser location]
+python3 h2CircuitGenerator.py [Configuration json file location] [GCParser location]
 ```
 	* This will generate secureDotProduct.cir, PartyOneInputFile.cir, and PartyTwoInputFile.cir. Then, the program runs GCParser with generated files via the runCircuit script. The results will be piped into ./results/siclientout ./results/siserverout
 	* The result files have a variable greaterOrEqualToT which is 1 if the dot product is greater than t and 0 if the dot product is less than t.
