@@ -4,7 +4,7 @@
 	* Sammie Bush
 	* Dalton Cole
 
-# System Requirements
+# Requirements
 	* Linux is the expected operating system
 		* Windows not supported
 	* gcparser must be downloaded
@@ -12,6 +12,13 @@
 			* http://mightbeevil.org/gcparser/ 
 			* https://github.com/wrmelicher/GCParser
 	* Java and Python3 to be installed
+	
+	*Threshold should be unsigned int that can fit within 2 * numBitsForInput + ceiling(lg numberOfTerms) bits
+	*Number of bits for the input must be a positive integer
+	*Party1 & Party2 each have same set size of unsigned ints all of which can be represented by numBitsForInput
+	
+	
+	
 
 # How to Run
 	* We provide a h2Circuit generator which takes in a config.json and the GCParser location to generates and then run the circuit file. This does a threshold based secure dot product on the inputs supplied in the config.json.
