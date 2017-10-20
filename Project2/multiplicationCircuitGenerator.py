@@ -46,7 +46,8 @@ def generateCircuitForFile(outputFile,numBitsForInput,numTerms):
     outText = ""
     #calculate max possible bits needed for operations
     maxNeededMultiplicationBits = 2*numBitsForInput
-    maxNeededSumBits = maxNeededMultiplicationBits+int(math.ceil(math.log(maxNeededMultiplicationBits,2)))*2
+    #adding one bit in case t is right at threshold
+    maxNeededSumBits = maxNeededMultiplicationBits+int(math.ceil(math.log(maxNeededMultiplicationBits,2)))*2 +1
     #now make the circuit file
     with open(outputFile,'w') as f:
         # generate input block
@@ -56,7 +57,8 @@ def generateCircuitForFile(outputFile,numBitsForInput,numTerms):
             outText = outText + ".input party2Term"+str(i)+" 1 "+str(numBitsForInput)+"\n"
         #then output block
         outText = outText + "\n"
-        outText = outText + ".output finalResult"+str(numTerms-1)+"\n"
+		#uncomment this line if you want to see the final product
+        #outText = outText + ".output finalResult"+str(numTerms-1)+"\n"
         outText = outText + ".output greaterOrEqualToT"+"\n"
         outText = outText + "\n"
         f.write(outText)
