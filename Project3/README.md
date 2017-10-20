@@ -11,7 +11,8 @@
 
 
 # How to Run
-
+	* Usage: 
+		* python paillier.py [p, q, and g file] [~u file] [~v file]
 
 # Example
 
