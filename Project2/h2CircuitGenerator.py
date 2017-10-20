@@ -1,6 +1,7 @@
-# Python file to generate circuit file
-# to compute secure dot product given number of terms
-# and number of bits of each term
+# Python file to generate circuit file and input files
+#then execute them given a jsonfile(format specified belo
+#and the path to Gcparser on the system
+
 
 import sys
 import os
@@ -25,18 +26,23 @@ def main():
         data[key] = list(map(int, data[key].split(',')))
 
     # Find max number of bits
-    '''
+
     numBitsForInput = 2
     max_input = 0
-
-    for key, value in data.items():
-        for i in value:
-            max_input = max(max_input, i)
-    while(pow(2, numBitsForInput) - 1 < max_input):
+    if(len(data['party1'])!=len(data['party2'])):
+        print("both parties must have same number of items")
+        quit()
+    #now make sure properly allocated bits
+    for value in data['party1']:
+        max_input = max(max_input, value)
+    for value in data['party2']:
+        max_input = max(max_input, value)
+    while(pow(2, numBitsForInput)-1 < max_input):
         numBitsForInput += 1
-    numBitsForInput *= 2
-    numBitsForInput += len(data['party1']) - 1
-    '''
+    if(numBitsForInput>data['numBitsForInput'][0]):
+        print("Invalid number of bits allocated for inputs ")
+        quit()
+
     circuitFileName = "secureDotProduct.cir"
     generateCircuitForFile( circuitFileName, data['numBitsForInput'][0], len(data['party1']))
 
@@ -50,57 +56,24 @@ def main():
     party1outText = "t "+str(data['t'][0])+"\n"
     party2outText = ""
 
-    # Generate input block
+    # Generate input files for server and client
     input_index = 0
     for value in data['party1']:
         #outText += ".input party1a" + str(input_index) + " 1 " + str(numBitsForInput) + '\n'
         party1outText += "party1Term" + str(input_index) + " " + str(value) + '\n'
         input_index += 1
-
-
     input_index = 0
     for value in data['party2']:
-        # outText += ".input party2b" + str(input_index) + " 2 " + str(numBitsForInput) + '\n'
         party2outText += "party2Term" + str(input_index) + " " + str(value) + '\n'
         input_index += 1
     with open(outInput1FileName, 'w') as f:
         f.write(party1outText)
-
     with open(outInput2FileName, 'w') as f:
         f.write(party2outText)
+    #now run the generated gc circuit
     print(" running " + "./runCircuit " + sys.argv[
-        2] + " ./" + circuitFileName + " ./" + outInput1FileName + " ./" + outInput2FileName)
-    ##os.system("./runCircuit " + sys.argv[2] + " ./" + circuitFileName + " ./" + outInput1FileName + " ./" + outInput2FileName)
-
-'''
-    temp_text = "\n"
-
-    party_variable_list = deque()
-    input_index = 0
-    for value1, value2 in zip(data['party1'], data['party2']):
-        for i in range(value2):
-            party_variable_list.append("party1a" + str(input_index))
-        input_index += 1
-
-
-    index_number = 0
-    while party_variable_list:
-        if index_number == 0:
-            temp_text += 'sum' + str(index_number) + ' add ' + str(party_variable_list.pop()) + ' ' + str(party_variable_list.pop()) + '\n'
-        else:
-            temp_text += 'sum' + str(index_number) + ' add ' + 'sum' + str(index_number - 1) + ' ' + str(party_variable_list.pop()) + '\n'
-        index_number += 1
-
-    # Generate output block
-    outText += "\n"
-    outText += ".output sum" + str(index_number - 1) + "\n"
-
-    # Add computation block
-    outText += temp_text
-
-    with open(outFileName, 'w') as f:
-        f.write(outText)
-    '''
+        2] + " " + circuitFileName + " " + outInput1FileName + " " + outInput2FileName)
+    os.system("./runCircuit " + sys.argv[2] + " ./" + circuitFileName + " ./" + outInput1FileName + " ./" + outInput2FileName)
 
 if __name__ == "__main__":
     main()

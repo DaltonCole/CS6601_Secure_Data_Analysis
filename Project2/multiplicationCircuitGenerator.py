@@ -23,19 +23,19 @@ def generateMultiplicationforNBitNumbers(term1,term2,numBits,maxNeededBits,run):
             text+= run+ "curBit"+curLoop+ " "
         text+="\n"
         #then and with other term to get multiplication result for this bit
-        text+=  run+"additionResult"+curLoop+chr(ord('a') +numBits)+" and " +run+"curBitExt"+curLoop \
+        text+=  run+"additionResult"+curLoop+" and " +run+"curBitExt"+curLoop \
                 + " " +term2 + "\n"
         #and finally add it to our running total
         if(i==0):
-            text+= run+"multiplicationResult"+curLoop+" concat 0:"+str(maxNeededBits-numBits)+" "+run+"additionResult"+curLoop+chr(ord('a') +numBits)\
+            text+= run+"multiplicationResult"+curLoop+" concat 0:"+str(maxNeededBits-numBits)+" "+run+"additionResult"+curLoop\
                    +"\n"
         else:
             #shift left by i and
-            text+= run + "additionResultFinal" + curLoop+chr(ord('a')+numBits) + " concat 0:"+str(maxNeededBits-numBits-i)+" "+ \
-                   run + "additionResult" + curLoop + chr(ord('a') + numBits) + " 0:"+str(i) + "\n"
+            text+= run + "additionResultFinal" + curLoop + " concat 0:"+str(maxNeededBits-numBits-i)+" "+ \
+                   run + "additionResult" + curLoop + " 0:"+str(i) + "\n"
             #we add i zeroes then make sure same length for addition
             text+= run+"multiplicationResult"+curLoop+" add "+run+"multiplicationResult"+str(i-1)+\
-                   " "+run + "additionResultFinal" + curLoop+ chr(ord('a') + numBits)+"\n"
+                   " "+run + "additionResultFinal" + curLoop +"\n"
 
     return text
 
@@ -46,11 +46,9 @@ def generateCircuitForFile(outputFile,numBitsForInput,numTerms):
     outText = ""
     #calculate max possible bits needed for operations
     maxNeededMultiplicationBits = 2*numBitsForInput
-    print(maxNeededMultiplicationBits)
-    maxNeededSumBits = maxNeededMultiplicationBits+int(math.ceil(math.log(maxNeededMultiplicationBits,2)))
+    maxNeededSumBits = maxNeededMultiplicationBits+int(math.ceil(math.log(maxNeededMultiplicationBits,2)))*2
     #now make the circuit file
     with open(outputFile,'w') as f:
-
         # generate input block
         outText += ".input t 2 "+str(maxNeededSumBits)+"\n"
         for i in range(0,numTerms):
@@ -65,18 +63,20 @@ def generateCircuitForFile(outputFile,numBitsForInput,numTerms):
         outText = ""
         #now generate the math
         for i in range(0,numTerms):
-            #first we generate the multiplications for current vector element
+            #need a unique string for each loop so variable names aren't repeated
+            currentUniqueChar = ''
+            for k in range(0,i):
+                currentUniqueChar+='a'
+            # first we generate the multiplications for current vector element
             outText += generateMultiplicationforNBitNumbers("party1Term"+str(i),"party2Term"+str(i),
-                                                            numBitsForInput,maxNeededMultiplicationBits,chr(ord('a')+i))
+                                                            numBitsForInput,maxNeededMultiplicationBits,currentUniqueChar)
             #then we add them to the running total
             if(i==0):
-                outText +="finalResultInter0 select "+chr(ord('a') +i)+"multiplicationResult"+str(numBitsForInput-1)+" 0 "+\
-                           str(maxNeededMultiplicationBits) +"\n"
                 outText += "finalResult0 concat 0:"+str(maxNeededSumBits-maxNeededMultiplicationBits)+ " "+\
-                            chr(ord('a') +i)+"multiplicationResult"+str(numBitsForInput-1)+"\n"
+                            currentUniqueChar+"multiplicationResult"+str(numBitsForInput-1)+"\n"
             else:
                 outText += "finalResultInterExt"+str(i)+" concat  0:"+str(maxNeededSumBits-maxNeededMultiplicationBits)+ " "+ \
-                           chr(ord('a') + i) + "multiplicationResult" + str(numBitsForInput - 1) + "\n"
+                           currentUniqueChar+ "multiplicationResult" + str(numBitsForInput - 1) + "\n"
                 outText += "finalResult"+str(i)+" add finalResult"+str(i-1)+" finalResultInterExt"+str(i)+"\n"
             f.write(outText)
             outText = ""
