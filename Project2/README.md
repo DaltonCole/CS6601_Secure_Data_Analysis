@@ -7,14 +7,18 @@
 # Requirements
 	* Linux is the expected operating system
 		* Windows not supported
+		
 	* gcparser must be downloaded
 		* It can be downloaded directly from:
 			* http://mightbeevil.org/gcparser/ 
 			* https://github.com/wrmelicher/GCParser
+			
 	* Java and Python3 to be installed
 	
 	*Threshold should be unsigned int that can fit within 2 * numBitsForInput + ceiling(lg numberOfTerms) bits
+	
 	*Number of bits for the input must be a positive integer
+	
 	*Party1 & Party2 each have same set size of unsigned ints all of which can be represented by numBitsForInput
 	
 	
