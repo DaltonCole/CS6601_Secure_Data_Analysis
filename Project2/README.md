@@ -24,14 +24,15 @@ python3 h2CircuitGenerator.py config.json [GCParser location]
 		* The result files have a variable greaterOrEqualToT which is 1 if the dot product is greater than t and 0 if the dot product is less than t.
 
 # Examples
+	#Command:
 ```
-Command:
 python3 h2CircuitGenerator.py config.json ./
+```
 
-config.json:
+	#config.json:
+```
 {
   "party1": "2,4,6",
   "party2": "1,3,8"
 }
-
 ```
