@@ -74,7 +74,7 @@ def main():
     print(" running " + "./runCircuit " + sys.argv[
         2] + " " + circuitFileName + " " + outInput1FileName + " " + outInput2FileName)
 	#need to set circuit file to executable
-    os.chmod("runCircuit",0666)
+    os.system("chmod +x runCircuit")
     os.system("./runCircuit " + sys.argv[2] + " ./" + circuitFileName + " ./" + outInput1FileName + " ./" + outInput2FileName)
 
 if __name__ == "__main__":
