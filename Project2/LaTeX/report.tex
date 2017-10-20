@@ -1,0 +1,33 @@
+\documentclass[times]{article}
+
+\usepackage[margin=1.0in]{geometry}
+\usepackage{graphicx}
+\usepackage{adjustbox}
+\usepackage{float}
+\usepackage{placeins}
+\usepackage[none]{hyphenat}
+\usepackage{amsmath}
+\usepackage[us]{datetime}
+\usepackage[explicit]{titlesec}
+\usepackage{url}
+\begin{document}
+	\title{CS6601  - Fall 2017 \\ Project 2}
+	\author{Adam Bowers \\ Sammie Bush \\ Dalton Cole}
+	\date{\formatdate{20}{10}{2017}}
+	\maketitle
+	
+	For this project, the goal is to see if a dot product between two vectors is greater than or equal to some threshold. The vectors and thresholds are specified in \textit{config.json}. To accomplish bit multiplication, we implemented \cite{ref:mult}. The basic principle is thus: for each bit in A (the first number), multiply that bit by B (the second number) and store it in $C_i$ where i starts at 0. Bit shift each $C_i$ left by i. Finally, add each number together using bit addition. This will generate the final product. To do a dot product, add up each multiplication result. This will yield $D$, the dot product. To finish the circuit, we compare $D$ to the threshold value specified in the configuration file. If $D$ is greater than the set threshold, then a value of 1 will be outputted, 0 otherwise.
+
+	For the threshold value, it is assumed that the number of bits will be no greater than the max number of bits that the dot product can take. The formula used to calculate the max number of bits for the dot product is shown in Equation \ref{equ:bits}.
+
+	\begin{equation}
+		\label{equ:bits}
+		2 * \textnormal{bits of largest number} + ciel(lg(\textnormal{Vector Size - 1}))
+	\end{equation}
+
+
+	\medskip
+	\bibliographystyle{plain}
+	\bibliography{bib}
+
+\end{document}
