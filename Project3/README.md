@@ -8,11 +8,16 @@
 # System Requirements
 	* Linux is the expected operating system
 		* Can run on Windows, but path information will be different
+	* GMP library must be present.
+	
 
 
 # How to Run
 	* Usage: 
-		* python paillier.py [p, q, and g file] [~u file] [~v file]
+	    * paillier [p, q, and g file input] [Key output file] [~u file][E(~u) output file] [~v file] [E(~v) output file]
+
+# Output
+
 
 # Example
 
