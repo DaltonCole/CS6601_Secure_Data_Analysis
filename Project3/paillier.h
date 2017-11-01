@@ -29,3 +29,6 @@ typedef struct //private key
 
 
 void setPrivateKey(mpz_t& privateKey_lambda, mpz_t& privateKey_u, mpz_t p, mpz_t q, mpz_t g, mpz_t n);
+
+
+void encryption(mpz_t& result, mpz_t& message, mpz_t g, mpz_t& n, gmp_randstate_t& r_state);
