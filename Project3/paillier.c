@@ -70,7 +70,7 @@ int main ( int argc, char *argv[] )
 //		mpz_clear(numbers[i]);
 //	}
 //	delete numbers;
-  mpz_t p,q,g,lambda,n,u;  // n = p * q, g = number of bits for key
+  mpz_t p,q,g,lambda,n,u, encryptionResult;  // n = p * q, g = number of bits for key
 
 
 
@@ -91,6 +91,26 @@ int main ( int argc, char *argv[] )
   outputMPZ(lambdaFile,lambda);
   outputMPZ(lambdaFile, u);
   fclose(lambdaFile);
+
+  FILE* vectorUEncryptionFile = openAndValidateFile(argv[4],"wb");
+  printf("%d \n", numVectorLines );
+  for(int i = 0; i<numVectorLines; i++)
+  {
+    printf("%d \n", i);
+    encryption(encryptionResult, vectorU[i], g, n, r_state);
+    outputMPZ(vectorUEncryptionFile, encryptionResult);
+
+  }
+  fclose(vectorUEncryptionFile);
+
+  FILE* vectorVEncryptionFile = openAndValidateFile(argv[6],"wb");
+  for(int i = 0; i<numVectorLines; i++)
+  {
+    encryption(encryptionResult, vectorV[i], g, n, r_state);
+    outputMPZ(vectorVEncryptionFile, encryptionResult);
+
+  }
+  fclose(vectorVEncryptionFile);
 
 
 	//delete numbers;
@@ -140,6 +160,7 @@ void setPrivateKey(mpz_t& privateKey_lambda, mpz_t& privateKey_u, mpz_t p, mpz_t
   mpz_init(n_squared);
   mpz_pow_ui(n_squared, n, 2);
   mpz_powm(privateKey_u, g, privateKey_lambda, n_squared);  // g^lambda MOD n^2
+  mpz_invert(privateKey_u,privateKey_u,n);
   //mpz_sub_ui(privateKey_u, privateKey_u, 1); // u - 1
   //mpz_div(privateKey_u, privateKey_u, n); // u / n  // Not sure on division. Function chosen in hopes that input is correct. OTherwise, could use mpz_div()
 
@@ -147,14 +168,31 @@ void setPrivateKey(mpz_t& privateKey_lambda, mpz_t& privateKey_u, mpz_t p, mpz_t
 
 }
 
-void encryption(mpz_t message, mpz_t g, mpz_t n)
+void encryption(mpz_t& result, mpz_t& message, mpz_t g, mpz_t& n, gmp_randstate_t& r_state)
 {
+  mpz_t randNum;
+  mpz_t n_squared;
+  mpz_init(result);
+  mpz_init(n_squared);
+  
 
-  //mpz_powm(g, );//g^x
-  //r^m
-  //mod m^2
+  printf("In Encryption \n");
+
+  generateRandom(n, randNum, r_state);
+  printf("After Generate Random \n");
+
+  mpz_pow_ui(n_squared, n, 2); // n^2
+  printf("AFter n_squared \n");
+  mpz_powm(g, g, message, n_squared);//g^x
+
+  printf("Before Randnum 1 \n");
+  mpz_powm(randNum, randNum, n, n_squared);//r^n
+  mpz_mul(result, randNum, g); // g^x * r^n
+  mpz_mod(result, result, n_squared);//mod m^2
 
 
+  printf("Leaving Encryption \n");
+  return;
 
 }
 
