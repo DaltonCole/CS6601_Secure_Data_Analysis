@@ -27,26 +27,52 @@ void generate_next_Prime(mpz_t& next_prime, const mpz_t& current_prime) {
 }
 
 // Given k, generate a file with p, q and g
-void key_generation(gmp_randstate_t& r_state) {
+
+//////////////////////////////////////////////////////////////////////
+/// @fn key_generation(gmp_randstate_t& r_state, const mp_bitcnt_t & k)
+/// @brief Generates p, q, and g and saves those values to a file
+///  called "p_q_g.txt"
+/// @pre GMP State has already been generated
+/// @param gmp_randstate_t& r_state: The randomly generated state
+/// @param mp_bitcnt_t k: The max number of bits for p and q
+////////////////////////////////////////////////////////////////////// 
+void key_generation(gmp_randstate_t& r_state, const mp_bitcnt_t & k) {
   // Generate p
   mpz_t p;
   mpz_init(p);
-  mp_bitcnt_t k = 1024;
-
   generateRandomPrime_bits(k, p, r_state);
-  gmp_printf("%Zd\n", p);
+  //gmp_printf("%Zd\n", p); // Example on how to print gmp_ints
 
   // Generate q
   mpz_t q;
   mpz_init(q);
-
   generate_next_Prime(q, p);
-  gmp_printf("%Zd\n", q);
+  //gmp_printf("%Zd\n", q);
 
+  // Define n to be p*q
+	mpz_t n;
+  mpz_init(n);
+  mpz_mul(n, p, q);
+
+  // Generate n^2
+  mpz_t n_squared;
+  mpz_init(n_squared);
+  mpz_mul(n_squared, n, n);
+
+  // Generate g as an element of [0, n^2)
+  mpz_t g;
+  mpz_init(g);
+  generateRandom(n_squared, g, r_state);
+
+  /*
   // Make 1
   mpz_t one;
   mpz_init(one);
   mpz_set_str(one, "1", 10);
+  // Make -1
+  mpz_t n_one;
+  mpz_init(n_one);
+  mpz_set_str(n_one, "-1", 10);
 
   // p-1, q-i
   mpz_t p_minus_1;
@@ -56,25 +82,35 @@ void key_generation(gmp_randstate_t& r_state) {
   mpz_sub(p_minus_1, p, one);
   mpz_sub(q_minus_1, q, one);
 
-  // Define n to be p*q
-	mpz_t n;
-  mpz_init(n);
-  mpz_mul(n, p, q);
-
   // Define lambda
   mpz_t lambda;
   mpz_init(lambda);
   mpz_lcm(lambda, p_minus_1, q_minus_1);
 
-  // Generate n^2
-  mpz_t n_squared;
-  mpz_init(n_squared);
-  mpz_mul(n_squared, n, n);
+  // Mew
+  mpz_t L;
+  mpz_init(L);
 
-  // Generate g as an alement of [0, n^2)
-  mpz_t g;
-  mpz_init(g);
-  generateRandom(n_squared, g, r_state);
+  mpz_powm(L, g, lambda, n_squared);
+  mpz_sub(L, L, one);
+  mpz_cdiv_q(L, L, n);
+  mpz_powm(L, L, n_one, n);
+  */
+
+  // Save p, q, and g to a file
+  FILE *f = fopen("p_q_g.txt", "w");
+  if(f == NULL) {
+  	printf("ERROR opening p_q_g.txt\n");
+  	exit(1);
+  }
+  mpz_out_str(f, 10, p);
+  fprintf(f, "\n");
+  mpz_out_str(f, 10, q);
+  fprintf(f, "\n");
+  mpz_out_str(f, 10, g);
+  fprintf(f, "\n");
+
+  fclose(f);
+
+  return;
 }
-
-// 

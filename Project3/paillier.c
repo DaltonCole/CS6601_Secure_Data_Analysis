@@ -55,7 +55,8 @@ int main ( int argc, char *argv[] )
   */
   
   // Key Generation
-  key_generation(r_state);
+  mp_bitcnt_t k = 1024;
+  key_generation(r_state, k);
 
 
 /*
