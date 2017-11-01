@@ -119,12 +119,24 @@ void setPrivateKey(mpz_t& privateKey_lambda, mpz_t& privateKey_u, mpz_t p, mpz_t
   mpz_init(n_squared);
   mpz_pow_ui(n_squared, n, 2);
   mpz_powm(privateKey_u, g, privateKey_lambda, n_squared);  // g^lambda MOD n^2
-  mpz_sub_ui(privateKey_u, privateKey_u, 1); // u - 1
-  mpz_divexact(privateKey_u, privateKey_u, n); // u / n  // Not sure on division. Function chosen in hopes that input is correct. OTherwise, could use mpz_div()
+  //mpz_sub_ui(privateKey_u, privateKey_u, 1); // u - 1
+  //mpz_div(privateKey_u, privateKey_u, n); // u / n  // Not sure on division. Function chosen in hopes that input is correct. OTherwise, could use mpz_div()
 
   return;
 
 }
+
+void encryption(mpz_t message, mpz_t g, mpz_t n)
+{
+
+  //mpz_powm(g, );//g^x
+  //r^m
+  //mod m^2
+
+
+
+}
+
 
 /*
 void encryption(paillier_plaintext_t* res, paillier_pubkey_t* pub, paillier_plaintext_t* pt, paillier_get_rand_t get_rand)
