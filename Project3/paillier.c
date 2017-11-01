@@ -2,11 +2,12 @@
   Usage: Parameter one is p,q,g file input.
         Parameter two is key output file.
         Parameter three is vector u input file.
-        Parameter four is vector v input file.
-        parameter five is encrypted vector u output file.
+        parameter four is encrypted vector u output file.
+        Parameter five is vector v input file.
         parameter six is encrypted vector v output file.
 
-
+Example:
+./a.out pqgFile.txt keyOutput.txt vectorU.txt outputVectorU.txt vectorV.txt outputVectorV.txt
 
 
 */
@@ -15,167 +16,62 @@
 #include <stdlib.h>
 #include <string.h>
 #include<gmp.h>
+#include "paillier.h"
+#include "paillier_io.c"
 
-/*
-typedef struct  //plaintext
-{
-  mpz_t m;
-} plainText_t;
-
-typedef struct //cipher text
-{
-  mpz_t m;
-} cipherText_t;
-
-
-typedef struct //public key
-{
-  int bits;
-  mpz_t n;
-} publicKey_t;
-
-typedef struct //private key
-{
-  mpz_t lambda;
-} privateKey_t;
-*/
-
-//have to assume a max line width for fgets, doubt he'll use more than 300000
-const int MAX_LINE_WIDTH=30000;
-//function to strip whitespace from a char array
-//we use it to sanitize input file lines
-
-char* deblank(char* input)                                
-{
-    char *output=input;
-	int jCharacters = strlen(input);
-    for (int i = 0, j = 0; i<strlen(input); i++,j++)
-    {
-		
-        if (input[i]!=' '&&input[i]!='\n'&&input[i]!='\t'&&input[i]!=NULL)                                             
-            output[j]=input[i];                                        
-        else
-		{
-            j--;        
-			jCharacters--;
-		}
-    }
-	output[jCharacters]='\0';
-    return output;                                                          
-}
-
-//function that reads in next line of file, and if successful
-//imports it into an mpz_t, which is returned
-//Assumes that file is already open in r Mode
-void readFileLine(FILE* inputFile,mpz_t& nextVal)
-{
-	char* line = new char[MAX_LINE_WIDTH];
-	size_t len = 0;
-	mpz_init(nextVal);
-	
-	if(fgets(line,MAX_LINE_WIDTH,inputFile)!=NULL)//(read = getline(inputFile,line)&line, &len,inputFile)!=-1))
-	{
-		line = deblank(line);
-		printf(line);
-		printf("\n");
-		mpz_set_str(nextVal,line,10);//(nextVal,length,1,1,0,0,line);//sizeof(int),0,0,line);
-		//delete line;
-	}
-	delete line;
-	return;
-}
-
-//simply opens and validates file, simple function but saves repeated code
-FILE* openAndValidateFile(char* filePath, const char* openMode)
-{
-	FILE* fileToRead = fopen(filePath,openMode);
-	if(fileToRead == NULL)
-	{
-		printf("Failed to open File ");
-		printf("%s",filePath);
-		exit(-1);
-	}
-	return fileToRead;
-}
-	
-//assumes one int on every line of file,
-//first reads number of terms then reads in mpz_t  for each line
-//and returns resulting array, in addition numLines changed to 
-//number of terms
-mpz_t* readAllFileLines(char* fileName, int& numLines)
-{
-	FILE* fileToRead = openAndValidateFile(fileName,"r");
-	//now count lines
-	char* line = NULL;
-	numLines = 0;
-	/*
-	size_t len = 0;
-	ssize_t read;
-	if((read = getline(&line, &len,fileToRead)!=-1))
-	{
-		numLines++;
-	}*/
-	int ch;
-	while(EOF!=(ch=getc(fileToRead)))
-	{
-		if('\n' == ch)
-		{
-			numLines++;
-		}
-	}
-	fseek(fileToRead,0,SEEK_SET);
-	if(numLines==0)
-	{
-		fclose(fileToRead);
-		return NULL;
-	}
-	//now allocate number array and fill with each line
-	mpz_t* numbers = new mpz_t[numLines];
-	int curLine=0;
-	while(curLine<numLines)
-	{
-		readFileLine(fileToRead,numbers[curLine]);
-		curLine++;
-	}
-	fclose(fileToRead);
-	return numbers;
-}
-
-//simply outputs an mpz and newline to given file,
-//assumes mpz allocated and file properly allocated
-void outputMPZ(FILE* file, mpz_t& term)
-{
-	//file*, base, mpz_t
-	mpz_out_str(file,10,term);
-	fprintf(file,"\n");
-	return;
-}
-
-//outputs list of mpz_t assuming it can open a file
-void outputListMPZ(char* fileName, int& length, mpz_t terms[])
-{
-
-	FILE* outputFile = openAndValidateFile(fileName,"w");
-	for(int i=0;i<length;i++)
-	{
-		printf("%d",i);
-		printf("\n");
-		outputMPZ(outputFile,terms[i]);
-	}
-	printf("done\n");
-	return;
-}
 
 int main ( int argc, char *argv[] )
 {
-	int numLines;
-	mpz_t* numbers = readAllFileLines("inputVector.txt",numLines);
-	outputListMPZ("outputVector.txt",numLines,numbers);
-	for(int i=0;i<numLines;i++)
-	{
-		mpz_clear(numbers[i]);
-	}
-	delete numbers;
+	int numVectorLines;
+  int pqgLines = 3;
+  int privateKeyComponentLines = 2;
+  int numResultLines = 2;
+
+
+	//mpz_t* numbers = readAllFileLines("inputVector.txt",numLines);
+  mpz_t* pqgFile = readAllFileLines(argv[1], pqgLines);  //p is index 0, q index 1, g index 2
+  mpz_t* vectorU = readAllFileLines(argv[3], numVectorLines);
+  mpz_t* vectorV = readAllFileLines(argv[5], numVectorLines);
+
+/*
+  outputList(argv[2], privateKeyComponentLines, privateKeyList);
+  outputList(argv[4], numVectorLines, vectorU);
+  outputList(argv[6], numVectorLines, vectorV);
+  outputList(argv[7], numResultLines, Results);
+*/
+
+
+
+
+//	outputListMPZ("outputVector.txt",numLines,numbers);
+//	for(int i=0;i<numLines;i++)
+//	{
+//		mpz_clear(numbers[i]);
+//	}
+//	delete numbers;
+  mpz_t p,q,g,lambda,n,u;  // n = p * q, g = number of bits for key
+
+
+
+  mpz_init(p);
+  mpz_init(q);
+  mpz_init(g);
+  mpz_init(lambda);
+  mpz_init(n);
+  mpz_init(u);
+
+
+//  g = pqgFile[2];
+
+  mpz_mul(n, pqgFile[0], pqgFile[1]);
+
+  setPrivateKey(lambda, u, pqgFile[0], pqgFile[1], pqgFile[2], n);
+  FILE* lambdaFile = openAndValidateFile(argv[2],"wb");
+  outputMPZ(lambdaFile,lambda);
+  outputMPZ(lambdaFile, u);
+  fclose(lambdaFile);
+
+
 	//delete numbers;
 	//should validate args here
 	/*
@@ -189,7 +85,7 @@ int main ( int argc, char *argv[] )
          publicKey_t public;
          privateKey_t private;
 	*/
-	
+
 	//be sure to call mpz_clear on all mpz_t and freeing other memory
 	return 0;
 }
@@ -210,9 +106,65 @@ void generateKeys(int bits, publicKey_t** public, privatekey_t** private)
   return;
 
 }
+*/
 
-void encryption()
+void setPrivateKey(mpz_t& privateKey_lambda, mpz_t& privateKey_u, mpz_t p, mpz_t q, mpz_t g, mpz_t n)
 {
+  mpz_sub_ui(p, p, 1);
+  mpz_sub_ui(q, q, 1);
+  mpz_lcm(privateKey_lambda, p, q);
+
+
+  mpz_t n_squared;
+  mpz_init(n_squared);
+  mpz_pow_ui(n_squared, n, 2);
+  mpz_powm(privateKey_u, g, privateKey_lambda, n_squared);  // g^lambda MOD n^2
+  mpz_sub_ui(privateKey_u, privateKey_u, 1); // u - 1
+  mpz_divexact(privateKey_u, privateKey_u, n); // u / n  // Not sure on division. Function chosen in hopes that input is correct. OTherwise, could use mpz_div()
+
+  return;
+
+}
+
+/*
+void encryption(paillier_plaintext_t* res, paillier_pubkey_t* pub, paillier_plaintext_t* pt, paillier_get_rand_t get_rand)
+{
+  mpz_t r;
+  gmp_randstate_t rand;
+  mpz_t x;
+
+
+  //pick random binding factor
+  mpz_init(r);
+ 	init_rand(rand, get_rand, pub->bits / 8 + 1);
+	do
+		mpz_urandomb(r, rand, pub->bits);
+	while( mpz_cmp(r, pub->n) >= 0 );
+
+  //compute ciper text
+  if( !res )
+  {
+    res = (paillier_ciphertext_t*) malloc(sizeof(paillier_ciphertext_t));
+    mpz_init(res->c);
+  }
+
+  mpz_init(x);
+	mpz_powm(res->c, pub->n_plusone, pt->m, pub->n_squared);
+	mpz_powm(x, r, pub->n, pub->n_squared);
+
+	mpz_mul(res->c, res->c, x);
+	mpz_mod(res->c, res->c, pub->n_squared);
+
+	mpz_clear(x);
+	mpz_clear(r);
+  gmp_randclear(rand);
+
+	return res;
+
+
+
+
+
   mpz_t random;
 
 
@@ -223,7 +175,7 @@ void encryption()
   mpz_mod()
 
 
-
+  return;
 }
 
 
@@ -238,7 +190,7 @@ void decryption()
 
 
 
-
+  return;
 }
 
 void dotProduct(vectorU, vectorV)
@@ -249,9 +201,9 @@ void dotProduct(vectorU, vectorV)
 
   //encrypt v vector
 
-  
 
 
 
+  return;
 }
 */

@@ -91,7 +91,7 @@ public class MultiTMServer extends ProgServer {
 					outputState.wires[i].lbl.xor(Wire.R.shiftLeft(1).setBit(0)) + ")" + Color.black);
 	    }
 		
-		System.out.println(output);
+		System.out.println(output);
 
 	StopWatch.taskTimeStamp("output labels received and interpreted");
     }
@@ -99,7 +99,7 @@ public class MultiTMServer extends ProgServer {
     protected void verify_result() throws Exception {	System.out.println("Verifying results:");
 
 	System.out.println("output (verify): ");
-	System.out.println(X.multiply(Y)+"");
+	System.out.println(X.multiply(Y)+"");
 	System.out.println("output (pp):\t ");	System.out.println(output);
 
     }
