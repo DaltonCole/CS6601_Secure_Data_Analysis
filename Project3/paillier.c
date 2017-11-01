@@ -53,7 +53,7 @@ int main ( int argc, char *argv[] )
   mpz_init(fileBits);
   generateRandom(fileBits, share1, r_state);
   */
-  
+
   // Key Generation
   mp_bitcnt_t k = 1024;
   key_generation(r_state, k);
@@ -165,8 +165,8 @@ void setPrivateKey(mpz_t& privateKey_lambda, mpz_t& privateKey_u, mpz_t p, mpz_t
   mpz_init(n_squared);
   mpz_pow_ui(n_squared, n, 2);
   mpz_powm(privateKey_u, g, privateKey_lambda, n_squared);  // g^lambda MOD n^2
-  mpz_invert(privateKey_u,privateKey_u,n);
-  //mpz_sub_ui(privateKey_u, privateKey_u, 1); // u - 1
+  mpz_sub_ui(privateKey_u, privateKey_u, 1); // u - 1
+  mpz_invert(privateKey_u,privateKey_u,n);   //subtract and invert are L function
   //mpz_div(privateKey_u, privateKey_u, n); // u / n  // Not sure on division. Function chosen in hopes that input is correct. OTherwise, could use mpz_div()
 
   return;
@@ -179,7 +179,8 @@ void encryption(mpz_t& result, mpz_t& message, mpz_t g, mpz_t& n, gmp_randstate_
   mpz_t n_squared;
   mpz_init(result);
   mpz_init(n_squared);
-  
+  mpz_init(randNum);
+
 
   printf("In Encryption \n");
 
