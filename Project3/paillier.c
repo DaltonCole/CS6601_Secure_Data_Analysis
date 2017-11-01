@@ -53,6 +53,10 @@ int main ( int argc, char *argv[] )
   mpz_init(fileBits);
   generateRandom(fileBits, share1, r_state);
   */
+  
+  // Key Generation
+  key_generation(r_state);
+
 
 /*
   outputList(argv[2], privateKeyComponentLines, privateKeyList);
