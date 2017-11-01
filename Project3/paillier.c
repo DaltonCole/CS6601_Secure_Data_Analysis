@@ -15,9 +15,11 @@ Example:
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include<gmp.h>
+#include <gmp.h>
+#include <time.h> // Random number for state
 #include "paillier.h"
 #include "paillier_io.c"
+#include "key_generation.c"
 
 
 int main ( int argc, char *argv[] )
@@ -27,11 +29,30 @@ int main ( int argc, char *argv[] )
   int privateKeyComponentLines = 2;
   int numResultLines = 2;
 
+  if(argc != 7) {
+  	printf("Usage: ./a.out pqgFile.txt keyOutput.txt vectorU.txt outputVector.txt vectorV.txt outputVectorV\n");
+  }
 
 	//mpz_t* numbers = readAllFileLines("inputVector.txt",numLines);
   mpz_t* pqgFile = readAllFileLines(argv[1], pqgLines);  //p is index 0, q index 1, g index 2
   mpz_t* vectorU = readAllFileLines(argv[3], numVectorLines);
   mpz_t* vectorV = readAllFileLines(argv[5], numVectorLines);
+
+  // Generate random stae for gmp
+  srand(time(NULL));
+  gmp_randstate_t r_state;
+  unsigned long seed = rand();
+  gmp_randinit_default (r_state);
+  gmp_randseed_ui(r_state, seed);
+
+  // To generate Random Number:
+  /*
+  mpz_t share1;
+  mpz_init(share1);
+  mpz_t fileBits;
+  mpz_init(fileBits);
+  generateRandom(fileBits, share1, r_state);
+  */
 
 /*
   outputList(argv[2], privateKeyComponentLines, privateKeyList);
