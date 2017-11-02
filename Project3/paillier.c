@@ -4,7 +4,8 @@
         Parameter three is vector u input file.
         parameter four is encrypted vector u output file.
         Parameter five is vector v input file.
-        parameter six is encrypted vector v output file.
+        parameter six is encrypted vector v output file
+		parameter seven is encrypted dot product and dot product file.
 
 Example:
 ./a.out pqgFile.txt keyOutput.txt vectorU.txt outputVectorU.txt vectorV.txt outputVectorV.txt
@@ -26,11 +27,11 @@ int main ( int argc, char *argv[] )
 {
 	int numVectorLines;
   int pqgLines = 3;
-  int privateKeyComponentLines = 2;
+  int dotProductComponents = 2;
   int numResultLines = 2;
 
   if(argc != 7) {
-  	printf("Usage: ./a.out pqgFile.txt keyOutput.txt vectorU.txt outputVector.txt vectorV.txt outputVectorV\n");
+  	printf("Usage: ./a.out pqgFile.txt keyOutput.txt vectorU.txt outputVector.txt vectorV.txt outputVectorV dotProduct.txt\n");
   }
 
 	//mpz_t* numbers = readAllFileLines("inputVector.txt",numLines);
@@ -76,7 +77,7 @@ int main ( int argc, char *argv[] )
 //	}
 //	delete numbers;
   mpz_t p,q,g,lambda,n,u, encryptionResult;  // n = p * q, g = number of bits for key
-
+  mpz_t decryptionResult;
 
 
   mpz_init(p);
@@ -92,32 +93,63 @@ int main ( int argc, char *argv[] )
   mpz_mul(n, pqgFile[0], pqgFile[1]);
 
   setPrivateKey(lambda, u, pqgFile[0], pqgFile[1], pqgFile[2], n);
-  FILE* lambdaFile = openAndValidateFile(argv[2],"wb");
+  FILE* lambdaFile = openAndValidateFile(argv[2],"w");
   outputMPZ(lambdaFile,lambda);
   outputMPZ(lambdaFile, u);
   fclose(lambdaFile);
 
-  FILE* vectorUEncryptionFile = openAndValidateFile(argv[4],"wb");
-  printf("%d \n", numVectorLines );
+  mpz_t* vectorUEncryption = new mpz_t[numVectorLines];
   for(int i = 0; i<numVectorLines; i++)
   {
-    printf("%d \n", i);
-    encryption(encryptionResult, vectorU[i], g, n, r_state);
-    outputMPZ(vectorUEncryptionFile, encryptionResult);
-
+    encryption(vectorUEncryption[i], vectorU[i], pqgFile[2], n, r_state);
+	decryption(decryptionResult,vectorUEncryption[i],lambda,u,n);
+	//ecryption(mpz_t& result, mpz_t& cipherText, mpz_t& lambda, mpz_t& u, mpz_t& n)
   }
-  fclose(vectorUEncryptionFile);
-
-  FILE* vectorVEncryptionFile = openAndValidateFile(argv[6],"wb");
+  outputListMPZ(argv[4],numVectorLines,vectorUEncryption);
+  
+  mpz_t* vectorVEncryption = new mpz_t[numVectorLines];
   for(int i = 0; i<numVectorLines; i++)
   {
-    encryption(encryptionResult, vectorV[i], g, n, r_state);
-    outputMPZ(vectorVEncryptionFile, encryptionResult);
-
+    encryption(vectorVEncryption[i], vectorV[i], pqgFile[2], n, r_state);
+	decryption(decryptionResult,vectorVEncryption[i],lambda,u,n);
   }
-  fclose(vectorVEncryptionFile);
-
-
+  outputListMPZ(argv[6],numVectorLines,vectorVEncryption);
+  printf("DotProduct\n");
+  //compute secure dot product and unencrypt
+  mpz_t* dotProduct = new mpz_t[dotProductComponents];
+  computeSecureDotProdcut(dotProduct[0], vectorVEncryption, vectorU,n,numVectorLines);
+  decryption(dotProduct[1],dotProduct[0],lambda,u,n);
+  outputListMPZ(argv[7],dotProductComponents,dotProduct);
+  printf("Freeing memory\n");
+  //free memory
+  mpz_clear(lambda);
+  mpz_clear(u);
+  mpz_clear(n);
+  mpz_clear(encryptionResult);
+  mpz_clear(decryptionResult);
+  for(int i=0;i<dotProductComponents;i++)
+  {
+    mpz_clear(dotProduct[i]);
+  }
+  for(int i=0;i<pqgLines;i++)
+  {
+	  mpz_clear(pqgFile[i]);
+  }
+  
+  for(int i=0;i<numVectorLines;i++)
+  {
+	mpz_clear(vectorU[i]);
+	mpz_clear(vectorV[i]);
+	mpz_clear(vectorUEncryption[i]);
+	mpz_clear(vectorVEncryption[i]);
+  }
+  
+  delete[] dotProduct;
+  delete[] pqgFile;
+  delete[] vectorU;
+  delete[] vectorV;
+  delete[] vectorUEncryption;
+  delete[] vectorVEncryption;
 	//delete numbers;
 	//should validate args here
 	/*
@@ -175,32 +207,70 @@ void setPrivateKey(mpz_t& privateKey_lambda, mpz_t& privateKey_u, mpz_t p, mpz_t
 
 void encryption(mpz_t& result, mpz_t& message, mpz_t g, mpz_t& n, gmp_randstate_t& r_state)
 {
+	
   mpz_t randNum;
   mpz_t n_squared;
   mpz_init(result);
   mpz_init(n_squared);
   mpz_init(randNum);
 
-
-  printf("In Encryption \n");
-
   generateRandom(n, randNum, r_state);
-  printf("After Generate Random \n");
 
   mpz_pow_ui(n_squared, n, 2); // n^2
-  printf("AFter n_squared \n");
   mpz_powm(g, g, message, n_squared);//g^x
 
-  printf("Before Randnum 1 \n");
   mpz_powm(randNum, randNum, n, n_squared);//r^n
   mpz_mul(result, randNum, g); // g^x * r^n
   mpz_mod(result, result, n_squared);//mod m^2
+  mpz_clear(n_squared);
+  mpz_clear(randNum);
 
-
-  printf("Leaving Encryption \n");
   return;
 
 }
+
+void decryption(mpz_t& result, mpz_t& cipherText, mpz_t& lambda, mpz_t& u, mpz_t& n)
+{
+	mpz_t n_squared, c_pow;
+	mpz_init(n_squared);
+	mpz_init(c_pow);
+	mpz_init(result);
+	
+	mpz_mul(n_squared,n,n);
+	//c^lambda mod n^2
+	mpz_powm(c_pow,cipherText,lambda,n_squared);
+	mpz_sub_ui(c_pow, c_pow, 1); // u - 1
+	mpz_invert(c_pow,c_pow,n); 
+	
+	//L(c)*u
+	mpz_mul(result,c_pow,u);
+	//mod(n)
+	mpz_mod(result,result,n);
+	gmp_printf("%Zd\n",result);
+	mpz_clear(n_squared);
+	mpz_clear(c_pow);
+}
+
+
+void computeSecureDotProdcut(mpz_t& result, mpz_t* encryptedVector, mpz_t* unencryptedVector, mpz_t& n, int length)
+{
+	printf("Stuff\n");
+	mpz_t individualResults;
+	mpz_init(result);
+	printf("Loop\n");
+	for(int i=0; i<length;i++)
+	{
+		printf("%d",i);
+		printf("\n");
+		mpz_powm(individualResults,encryptedVector[i],unencryptedVector[i],n);
+		printf("opned\n");
+		mpz_add(result,result,individualResults);
+	}
+	mpz_mod(result,result,n);
+	mpz_clear(individualResults);
+	return;
+}
+
 
 
 /*
