@@ -66,7 +66,7 @@ mpz_t* readAllFileLines(char* fileName, int& numLines)
 	FILE* fileToRead = openAndValidateFile(fileName,"r");
 	//now count lines
 	char* line = NULL;
-	numLines = 0;
+	numLines = 1;
 	/*
 	size_t len = 0;
 	ssize_t read;
@@ -117,10 +117,7 @@ void outputListMPZ(char* fileName, int& length, mpz_t terms[])
 	FILE* outputFile = openAndValidateFile(fileName,"w");
 	for(int i=0;i<length;i++)
 	{
-		printf("%d",i);
-		printf("\n");
 		outputMPZ(outputFile,terms[i]);
 	}
-	printf("done\n");
 	return;
 }

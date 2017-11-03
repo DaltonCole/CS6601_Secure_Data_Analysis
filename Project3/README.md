@@ -20,4 +20,7 @@
 
 
 # Example
-
+	```
+	g++ paillier.c -lgmp
+	./a.out pqgFile.txt keyOutput.txt vectorU.txt outputVector.txt vectorV.txt outputVectorV dotProduct.txt True
+	```
