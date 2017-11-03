@@ -5,6 +5,7 @@
         parameter four is encrypted vector u output file.
         Parameter five is vector v input file.
         parameter six is encrypted vector v output file.
+        parameter seven is bool for us to generate the keys
 
 Example:
 ./a.out pqgFile.txt keyOutput.txt vectorU.txt outputVectorU.txt vectorV.txt outputVectorV.txt
@@ -29,8 +30,8 @@ int main ( int argc, char *argv[] )
   int privateKeyComponentLines = 2;
   int numResultLines = 2;
 
-  if(argc != 7) {
-  	printf("Usage: ./a.out pqgFile.txt keyOutput.txt vectorU.txt outputVector.txt vectorV.txt outputVectorV\n");
+  if(argc < 7) {
+  	printf("Usage: ./a.out pqgFile.txt keyOutput.txt vectorU.txt outputVector.txt vectorV.txt outputVectorV <True, False: We generate keys>\n");
   }
 
 	//mpz_t* numbers = readAllFileLines("inputVector.txt",numLines);
