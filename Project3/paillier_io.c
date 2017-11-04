@@ -1,4 +1,9 @@
-
+/*
+  Programmed by: Adam Bowers, Sammie Bush, Dalton Cole
+  CS6601 Project 3 11/3/2017
+  Description: Helper functions for file I/O for gmp data types
+*/
+			   
 //have to assume a max line width for fgets, doubt he'll use more than 300000
 const int MAX_LINE_WIDTH=30000;
 //function to strip whitespace from a char array

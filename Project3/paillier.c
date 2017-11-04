@@ -1,4 +1,8 @@
 /*
+  Programmed by: Adam Bowers, Sammie Bush, Dalton Cole
+  CS6601 Project 3 11/3/2017
+  Description: Use gmp to implement pailler encryption/decryption as well as secure dot product
+               via properties of pailler encryption
   Usage: Parameter one is p,q,g file input.
         Parameter two is key output file.
         Parameter three is vector u input file.
@@ -69,9 +73,6 @@ int main ( int argc, char *argv[] )
   }
 
   /* --- Read in inputs from file --- */
-  // pqgFile[0] = p
-  // pqgFile[1] = q
-  // pqgFile[2] = g
   mpz_t* pqgFile = readAllFileLines(argv[1], pqgLines);  
   // U Vector
   mpz_t* vectorU = readAllFileLines(argv[3], numVectorLines);
@@ -80,28 +81,24 @@ int main ( int argc, char *argv[] )
 
   // Multiply p * q to get n
   mpz_mul(n, pqgFile[0], pqgFile[1]);
-  
+  //get and output private key
   setPrivateKey(lambda, u, pqgFile[0], pqgFile[1], pqgFile[2], n);
   FILE* lambdaFile = openAndValidateFile(argv[2],"w");
   outputMPZ(lambdaFile,lambda);
   outputMPZ(lambdaFile, u);
   fclose(lambdaFile);
-
+  //encrypt u vector
   mpz_t* vectorUEncryption = new mpz_t[numVectorLines];
   for(int i = 0; i<numVectorLines; i++)
   {
-  	//printf("Current Term ");
-  	//gmp_printf("%Zd\n",vectorU[i]);
     encryption(vectorUEncryption[i], vectorU[i], pqgFile[2], n, r_state);
   	decryption(decryptionResult,vectorUEncryption[i],lambda,u,n);
   }
   outputListMPZ(argv[4],numVectorLines,vectorUEncryption);
-  
+  //encrypt v vector
   mpz_t* vectorVEncryption = new mpz_t[numVectorLines];
   for(int i = 0; i<numVectorLines; i++)
   {
-  	//printf("Current Term ");
-  	//gmp_printf("%Zd\n",vectorV[i]);
     encryption(vectorVEncryption[i], vectorV[i], pqgFile[2], n, r_state);
   	decryption(decryptionResult,vectorVEncryption[i],lambda,u,n);
   }
@@ -109,6 +106,7 @@ int main ( int argc, char *argv[] )
 
   // Compute secure dot product and unencrypt
   mpz_t* dotProduct = new mpz_t[dotProductComponents];
+  //assume party u will run in model so use v encrypted components and u's unecrypted components
   computeSecureDotProdcut(dotProduct[0], vectorVEncryption, vectorU,n,numVectorLines);//,lambda,u);
   decryption(dotProduct[1],dotProduct[0],lambda,u,n);
   outputListMPZ(argv[7],dotProductComponents,dotProduct);
@@ -150,7 +148,7 @@ void setPrivateKey(mpz_t& privateKey_lambda, mpz_t& privateKey_u, mpz_t p, mpz_t
   mpz_t l_result;
   mpz_sub_ui(p, p, 1);
   mpz_sub_ui(q, q, 1);
-  mpz_lcm(privateKey_lambda, p, q);
+  mpz_lcm(privateKey_lambda, p, q);//lamda = lcm(p-1,q-1)
 
 
   mpz_t n_squared;
@@ -164,7 +162,7 @@ void setPrivateKey(mpz_t& privateKey_lambda, mpz_t& privateKey_u, mpz_t p, mpz_t
 	printf("Failed to invert L val\n");
 	exit(-1);
   }
-  mpz_mod(privateKey_u,l_result,n);
+  mpz_mod(privateKey_u,l_result,n);//mew = L(g^lamda mod n^2)^-1 mod n
   //mpz_div(privateKey_u, privateKey_u, n); // u / n  // Not sure on division. Function chosen in hopes that input is correct. OTherwise, could use mpz_div()
 
   return;
@@ -197,8 +195,8 @@ void encryption(mpz_t& result, mpz_t& message, mpz_t& g, mpz_t& n, gmp_randstate
   mpz_powm(randNum, randNum, n, n_squared);//r^n
   
   mpz_mul(result, randNum, g_toX); // g^x * r^n
-  mpz_mod(result, result, n_squared);//mod m^2
-  
+  mpz_mod(result, result, n_squared);//mod n^2
+  //E(m) = g^m * r^n mod n^2
   mpz_clear(one);
   mpz_clear(gcd);
   mpz_clear(n_squared);
@@ -209,6 +207,7 @@ void encryption(mpz_t& result, mpz_t& message, mpz_t& g, mpz_t& n, gmp_randstate
   return;
 
 }
+
 
 void decryption(mpz_t& result, mpz_t& cipherText, mpz_t& lambda, mpz_t& u, mpz_t& n)
 {
@@ -234,7 +233,6 @@ void decryption(mpz_t& result, mpz_t& cipherText, mpz_t& lambda, mpz_t& u, mpz_t
 	mpz_clear(c_pow);
 }
 
-//math function for l(x) = x-1/n
 void L_function(mpz_t& result, mpz_t& x, mpz_t& n)
 {
 	mpz_t x_subOne;
@@ -249,7 +247,7 @@ void L_function(mpz_t& result, mpz_t& x, mpz_t& n)
 
 
 
-void computeSecureDotProdcut(mpz_t& result, mpz_t* encryptedVector, mpz_t* unencryptedVector, mpz_t& n,int length)//,mpz_t& lambda, mpz_t& u)
+void computeSecureDotProdcut(mpz_t& result, mpz_t* encryptedVector, mpz_t* unencryptedVector, mpz_t& n,int length)
 {
 	mpz_t individualResults,n_squared,decrypt;
 	mpz_init(result);
@@ -259,10 +257,11 @@ void computeSecureDotProdcut(mpz_t& result, mpz_t* encryptedVector, mpz_t* unenc
     mpz_set_si(result,1);
 	for(int i=0; i<length;i++)
 	{
+		//E(m*c) = E(m)^c mod n^2
 		mpz_powm(individualResults,encryptedVector[i],unencryptedVector[i],n_squared);
-		//decryption(decrypt,individualResults,lambda,u,n);
 		mpz_mul(result,result,individualResults);
 	}
+	//E(m1+m2) = E(m1)+E(m2)
 	mpz_mod(result,result,n_squared);
 	mpz_clear(individualResults);
 	return;
