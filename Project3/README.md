@@ -15,7 +15,8 @@
 # How to Run(after compiled)
 	* Usage: 
 	    * paillier [p, q, and g file input] [Key output file] [~u file] [E(~u) output file] [~v file] [E(~v) output file] [Dot Product file] [Program creates p, q, g (True or False)]
-
+		* Note that input files are expected to have one number per line, and be sure to not have an extra new line character in file especially at the end
+		* this is because we split the input by newline characters
 # Output
 	* None, necessary information is saved in the argument supplied files
 
