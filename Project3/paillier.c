@@ -9,7 +9,7 @@
         parameter eight is optional, we generate our own keys
 
 Example:
-./a.out pqgFile.txt keyOutput.txt vectorU.txt outputVectorU.txt vectorV.txt outputVectorV.txt
+./a.out pqgFile.txt keyOutput.txt vectorU.txt outputVectorU.txt vectorV.txt outputVectorV.txt True
 */
 
 #include <stdio.h>
@@ -81,35 +81,38 @@ int main ( int argc, char *argv[] )
   // Multiply p * q to get n
   mpz_mul(n, pqgFile[0], pqgFile[1]);
   
+  // Creates private key and saves it to a file specified in argv[2]
   setPrivateKey(lambda, u, pqgFile[0], pqgFile[1], pqgFile[2], n);
-  FILE* lambdaFile = openAndValidateFile(argv[2],"w");
+  FILE* lambdaFile = openAndValidateFile(argv[2], "w");
   outputMPZ(lambdaFile,lambda);
   outputMPZ(lambdaFile, u);
   fclose(lambdaFile);
 
+  // Encrypt U vector and save to file
   mpz_t* vectorUEncryption = new mpz_t[numVectorLines];
   for(int i = 0; i<numVectorLines; i++)
   {
-  	//printf("Current Term ");
+  	//printf("Current Term "); // Used for debugging
   	//gmp_printf("%Zd\n",vectorU[i]);
     encryption(vectorUEncryption[i], vectorU[i], pqgFile[2], n, r_state);
   	decryption(decryptionResult,vectorUEncryption[i],lambda,u,n);
   }
   outputListMPZ(argv[4],numVectorLines,vectorUEncryption);
   
+  // Encrypt V vector and save to file
   mpz_t* vectorVEncryption = new mpz_t[numVectorLines];
   for(int i = 0; i<numVectorLines; i++)
   {
-  	//printf("Current Term ");
+  	//printf("Current Term "); // Used for debugging
   	//gmp_printf("%Zd\n",vectorV[i]);
     encryption(vectorVEncryption[i], vectorV[i], pqgFile[2], n, r_state);
   	decryption(decryptionResult,vectorVEncryption[i],lambda,u,n);
   }
   outputListMPZ(argv[6],numVectorLines,vectorVEncryption);
 
-  // Compute secure dot product and unencrypt
+  // Compute secure dot product and un-encrypt
   mpz_t* dotProduct = new mpz_t[dotProductComponents];
-  computeSecureDotProdcut(dotProduct[0], vectorVEncryption, vectorU,n,numVectorLines);//,lambda,u);
+  computeSecureDotProdcut(dotProduct[0], vectorVEncryption, vectorU,n,numVectorLines);
   decryption(dotProduct[1],dotProduct[0],lambda,u,n);
   outputListMPZ(argv[7],dotProductComponents,dotProduct);
   
@@ -152,11 +155,11 @@ void setPrivateKey(mpz_t& privateKey_lambda, mpz_t& privateKey_u, mpz_t p, mpz_t
   mpz_sub_ui(q, q, 1);
   mpz_lcm(privateKey_lambda, p, q);
 
-
   mpz_t n_squared;
   mpz_init(n_squared);
   mpz_pow_ui(n_squared, n, 2);
-  mpz_powm(privateKey_u, g, privateKey_lambda, n_squared);  // g^lambda MOD n^2
+  // g^lambda MOD n^2
+  mpz_powm(privateKey_u, g, privateKey_lambda, n_squared);
   
   L_function(l_result,privateKey_u,n);
   if(!mpz_invert(l_result,l_result,n))
@@ -165,7 +168,6 @@ void setPrivateKey(mpz_t& privateKey_lambda, mpz_t& privateKey_u, mpz_t p, mpz_t
 	exit(-1);
   }
   mpz_mod(privateKey_u,l_result,n);
-  //mpz_div(privateKey_u, privateKey_u, n); // u / n  // Not sure on division. Function chosen in hopes that input is correct. OTherwise, could use mpz_div()
 
   return;
 
@@ -173,7 +175,6 @@ void setPrivateKey(mpz_t& privateKey_lambda, mpz_t& privateKey_u, mpz_t p, mpz_t
 
 void encryption(mpz_t& result, mpz_t& message, mpz_t& g, mpz_t& n, gmp_randstate_t& r_state)
 {
-	
   mpz_t randNum,n_squared,g_toX, n_plusOne, gcd,one;
   mpz_init(result);
   mpz_init(n_squared);
@@ -183,21 +184,20 @@ void encryption(mpz_t& result, mpz_t& message, mpz_t& g, mpz_t& n, gmp_randstate
   mpz_init(one);
   mpz_set_si(one,1);
 
-  //gcd r, n must equal one so keep getting random numbers till that happens
-  //only using while loop because in large fields this is extremely unlikely 
-  //to happen
-  do
-  {
-	generateRandom(n, randNum, r_state);
-	mpz_gcd(gcd,randNum,n);
-  }while(mpz_cmp(gcd,one)!=0);
+  // gcd r, n must equal one so keep getting random numbers till that happens
+  // only using while loop because in large fields this is extremely unlikely 
+  // to happen
+  do {
+    generateRandom(n, randNum, r_state);
+    mpz_gcd(gcd,randNum,n);
+  } while(mpz_cmp(gcd,one)!=0);
   mpz_pow_ui(n_squared, n, 2); // n^2
-  mpz_powm(g_toX, g, message, n_squared);//g^x
+  mpz_powm(g_toX, g, message, n_squared); // g^x
 
-  mpz_powm(randNum, randNum, n, n_squared);//r^n
+  mpz_powm(randNum, randNum, n, n_squared); // r^n
   
   mpz_mul(result, randNum, g_toX); // g^x * r^n
-  mpz_mod(result, result, n_squared);//mod m^2
+  mpz_mod(result, result, n_squared); // mod m^2
   
   mpz_clear(one);
   mpz_clear(gcd);
@@ -205,9 +205,7 @@ void encryption(mpz_t& result, mpz_t& message, mpz_t& g, mpz_t& n, gmp_randstate
   mpz_clear(randNum);
   mpz_clear(g_toX);
 
-
   return;
-
 }
 
 void decryption(mpz_t& result, mpz_t& cipherText, mpz_t& lambda, mpz_t& u, mpz_t& n)
@@ -218,36 +216,36 @@ void decryption(mpz_t& result, mpz_t& cipherText, mpz_t& lambda, mpz_t& u, mpz_t
 	mpz_init(result);
 		
 	mpz_mul(n_squared,n,n);
-	//c^lambda mod n^2
+	// c^lambda mod n^2
 	mpz_powm(c_pow,cipherText,lambda,n_squared);
 	
-	//now get l function val
+	// now get l function val
 	L_function(l_result,c_pow,n);
-	//L(c)*u
+	// L(c)*u
 	mpz_mul(result,l_result,u);
-	//mod(n)
+	// mod(n)
 	mpz_mod(result,result,n);
 	
-	//printf("Decrypted to get ");
+	//printf("Decrypted to get "); // Used for debugging
 	//gmp_printf("%Zd\n",result);
+
+  // Free variables
 	mpz_clear(n_squared);
 	mpz_clear(c_pow);
 }
 
-//math function for l(x) = x-1/n
+// math function for l(x) = x-1/n
 void L_function(mpz_t& result, mpz_t& x, mpz_t& n)
 {
 	mpz_t x_subOne;
 	mpz_init(result);
 	mpz_init(x_subOne);
-	//subtract 1 from x
+	// subtract 1 from x
 	mpz_sub_ui(x_subOne, x, 1); // u - 1
-	//need quotient division
+	// need quotient division
 	mpz_tdiv_q(result,x_subOne,n);
 	mpz_clear(x_subOne);
 }
-
-
 
 void computeSecureDotProdcut(mpz_t& result, mpz_t* encryptedVector, mpz_t* unencryptedVector, mpz_t& n,int length)//,mpz_t& lambda, mpz_t& u)
 {
@@ -260,7 +258,6 @@ void computeSecureDotProdcut(mpz_t& result, mpz_t* encryptedVector, mpz_t* unenc
 	for(int i=0; i<length;i++)
 	{
 		mpz_powm(individualResults,encryptedVector[i],unencryptedVector[i],n_squared);
-		//decryption(decrypt,individualResults,lambda,u,n);
 		mpz_mul(result,result,individualResults);
 	}
 	mpz_mod(result,result,n_squared);

@@ -3,11 +3,13 @@
 // rand number generator needs to be seeded before calling and state saved in "state"
 void generateRandom(const mpz_t& number, mpz_t& result, gmp_randstate_t& r_state)
 {   
-    //make sure its the same size
     mpz_urandomm(result, r_state, number);
     return;
 }
 
+// Generates a random number with the same max number of bits as "bits"
+// Result is saved in "result"
+// rand number generator needs to be seeded before calling and state saved in "state"
 void generateRandomPrime_bits(const mp_bitcnt_t& bits, mpz_t& result, gmp_randstate_t& r_state)
 {   
     mpz_urandomb(result, r_state, bits);
@@ -20,6 +22,7 @@ void generateRandomPrime_bits(const mp_bitcnt_t& bits, mpz_t& result, gmp_randst
     return;
 }
 
+// Generate next prime number
 void generate_next_Prime(mpz_t& next_prime, const mpz_t& current_prime) {
 	mpz_nextprime(next_prime, current_prime);
 
