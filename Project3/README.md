@@ -7,12 +7,12 @@
 
 # System Requirements
 	* Linux is the expected operating system
-		* Can run on Windows, but path information will be different
+		* Can run on Windows, assuming you can compile it
 	* GMP library must be present.
 	
 
 
-# How to Run
+# How to Run(after compiled)
 	* Usage: 
 	    * paillier [p, q, and g file input] [Key output file] [~u file] [E(~u) output file] [~v file] [E(~v) output file] [Dot Product file] [Program creates p, q, g (True or False)]
 

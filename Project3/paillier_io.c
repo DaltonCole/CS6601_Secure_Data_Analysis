@@ -1,3 +1,8 @@
+/*
+  Programmed by: Adam Bowers, Sammie Bush, Dalton Cole
+  CS6601 Project 3 11/3/2017
+  Description: Helper functions for file I/O for gmp data types
+*/
 
 // Max line width
 const int MAX_LINE_WIDTH=30000;
