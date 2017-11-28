@@ -70,28 +70,30 @@ He first computes
 	\item for i=1 to l 
 		\begin{itemize}
 			\item $E_{pk} (u_i * v_i ) \gets SM(E_{pk} (u_i) , E_{pk}(v_i))$
-			\\ first party one computes the same product of current bit of v and u
+			\\ first party one computes the product of current bit of v and u
 			\item if selected F: was u$>$v
 			 \subitem $W_i \gets E_{pk} (u_i) * E_{pk} (u_i * v_i)^{n-1}$
-			 \\compute $u_i - u_i*v_i $
+			 \\compute $u_i - u_i*v_i $ if there is any $W_i=1$ we know for i $u_i=1$ \& $v_i=0$
 			 \subitem $\Gamma_i \gets E_{pk}(v_i - u_i) * E_{pk}(r_i)$ where $r_i \in Z_n$
 			 \\compute $v_i - u_i +r_i$
 			\item else
 			\subitem $W_i \gets E_{pk} (v_i) * E_{pk} (u_i * v_i)^{N-1}$
-			\\compute $v_i - u_i*v_i $
+			\\compute $v_i - u_i*v_i $  if there is any $W_i=1$ we know for i $v_i=1$ \& $u_i=0$
 			\subitem $\Gamma_i \gets E_{pk}(u_i - v_i) * E_{pk}(r_i)$ where $r_i \in Z_n$
 			\\compute $u_i - v_i +r_i$
 			\item $G_i \gets E_{pk}(u_i \oplus v_i)$
 			\\now compute xor of two bits if 0 they're the same so first 1 tells us first different bit
 			\item $H_i \gets H_{i-1}^{s_i} * G_i ;$ where $s_i \in Z_n$ and $H_0 = E_{pk}(0)$
-			\\now mask the xor based on previous bits and a random number
+			\\now mask the xor based on previous bits and a random number, Hs will be 0 till first 1 then every term past that will be a random value based on $s$ values.
 			\item $\Phi_i \gets E_{pk}(-1) * H_i$
-			\\ \textbf{Not sure what this is for? to mask output for party two? two make sure 1s are 0 and every other value is a dont care?}
+			\\shift the domain of by n-1
+			 \textbf{Not sure what this is for? to mask output for party two? two make sure 1s are 0 and every other value is a random value?}
 			\item $L_i \gets W_i * \Phi_i^{t_i}$ where $t_i \in Z_n$
-			\\ compute final product to share with party two if term one and term two don't match $\Phi$ will be zero so $L_i$ is 1 otherwise it will be a junk term
+			\\ if $W_i$ is 1 $\Phi_i^{t_i}$ will be 0 thus $L_i$ will be 1 otherwise it will be some random value 
 		\end{itemize}
 	\item  $\Gamma' \gets \pi_1(\Gamma)$
 	\item $L' \gets \pi_2(L)$
+	\\we permute the outputs so P2 can't tell anything from indices of bits
 	\item send $\Gamma' \& L'$ to P2
 \end{itemize}
 Part 2\\
@@ -103,9 +105,10 @@ Party two computes
 		\subitem $\alpha \gets 1$
 	\item else
 		\subitem $\alpha \gets 0$
-	\\assign alpha based on L values
+	\\assign alpha based on L values. If there is a 1 we know the selected F function of P1
+	\\is true but not what it is
 	\item $M_i' \gets \Gamma_i^{\alpha '} for 1\le i \le l$
-	\\if we have a 1 in M then P1 gets $Gamma'$ back 
+	\\if we have a 1 in M then P1 gets $Gamma$ back, otherwise they get random values
 	\item send $M'$ and $E_{pk}(alpha)$ to P1
 \end{itemize}
 Part 3\\
@@ -115,10 +118,15 @@ Part 3\\
 	\item for i= 1 to l
 		\subitem $\lambda_i \gets M_i * E_{pk}(\alpha)^{N-r_i}$
 		\\if alpha = 1 we subtract the random value added to L in part one
+		\\to get either $v-u$ or $u-v$ depending on f chosen
 		\subitem if F = $u>v$ 
 			\subitem $E_{pk}(min(u,v)_i) \gets E_{pk}(u_i) * \lambda_i$
+			\\if $u>v$ $\lambda$ = $v-u$ if $v>u$ otherwise 0
+			\\therefore $u_i +\lambda_i$ gives us bit of highest value
 		\subitem else
 			\subitem $E_{pk}(min(u,v)_i) \gets E_{pk}(v_i) * \lambda_i$
+			\\if $v>u$ $\lambda$ = $u-v$ if $u>v$ otherwise 0
+			\\therefore $v_i +\lambda_i$ gives us bit of highest value
 	\item concat $E_{pk}(min(u,v)_i)$ and Party one has $E_{pk}(min(u,v))$ as required
 			
 \end{itemize}
