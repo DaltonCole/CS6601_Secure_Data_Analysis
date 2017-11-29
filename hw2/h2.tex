@@ -109,7 +109,7 @@ Party two computes
 	\\is true but not what it is
 	\item $M_i' \gets \Gamma_i^{\alpha '} for 1\le i \le l$
 	\\if we have a 1 in M then P1 gets $Gamma$ back, otherwise they get random values
-	\item send $M'$ and $E_{pk}(alpha)$ to P1
+	\item send $M'$ and $E_{pk}(\alpha)$ to P1
 \end{itemize}
 Part 3\\
 \begin{itemize}
@@ -130,6 +130,103 @@ Part 3\\
 	\item concat $E_{pk}(min(u,v)_i)$ and Party one has $E_{pk}(min(u,v))$ as required
 			
 \end{itemize}
+
+\subsection*{\textbf{Two Phase Version}}
+Let l be the bit length of u\&v, and let 1 be most significant bit and l least significant bit.
+Furthermore let BD be a secure Binary Decomposition function \& SM be a secure multiplication function
+
+Phase one of the protocol returns E(0) if u is the minimum and E(1) if v is the minimum or equal to u.
+
+\textbf{(Minimum(E(u),E(v))}
+\\where E(u) and E(v) are encrypted bitwise
+Part 1\\
+Party one randomly chooses functionality F=u>v or u<v
+He first computes 
+\begin{itemize}
+	\item for i=1 to l 
+	\begin{itemize}
+		\item $E_{pk} (u_i * v_i ) \gets SM(E_{pk} (u_i) , E_{pk}(v_i))$
+		\\ first party one computes the product of current bit of v and u
+		\item if selected F: was u$>$v
+		\subitem $W_i \gets E_{pk} (u_i) * E_{pk} (u_i * v_i)^{n-1}$
+		\\compute $u_i - u_i*v_i $ if there is any $W_i=1$ we know for i $u_i=1$ \& $v_i=0$
+		\item else
+		\subitem $W_i \gets E_{pk} (v_i) * E_{pk} (u_i * v_i)^{N-1}$
+		\\compute $v_i - u_i*v_i $  if there is any $W_i=1$ we know for i $v_i=1$ \& $u_i=0$
+		\item $G_i \gets E_{pk}(u_i \oplus v_i)$
+		\\now compute xor of two bits if 0 they're the same so first 1 tells us first different bit
+		\item $H_i \gets H_{i-1}^{s_i} * G_i ;$ where $s_i \in Z_n$ and $H_0 = E_{pk}(0)$
+		\\now mask the xor based on previous bits and a random number, Hs will be 0 till first 1 then every term past that will be a random value based on $s$ values.
+		\item $\Phi_i \gets E_{pk}(-1) * H_i$
+		\\shift the domain of by n-1
+		\textbf{Not sure what this is for? to mask output for party two? two make sure 1s are 0 and every other value is a random value?}
+		\item $L_i \gets W_i * \Phi_i^{t_i}$ where $t_i \in Z_n$
+		\\ if $W_i$ is 1 $\Phi_i^{t_i}$ will be 0 thus $L_i$ will be 1 otherwise it will be some random value 
+	\end{itemize}
+	\item $L' \gets \pi_2(L)$
+	\\we permute the output so P2 can't tell anything from indices of bits
+	\item send $L'$ to P2
+\end{itemize}
+Part 2\\
+Party two computes
+\begin{itemize}
+	\item $M \gets D_{sk}(L_i')$
+	\\decrypt our Ls
+	\item if there exists an $M_i=1$
+	\subitem $\alpha \gets 1$
+	\item else
+	\subitem $\alpha \gets 0$
+	\\assign alpha based on L values. If there is a 1 we know the selected F function of P1
+	\\is true but not what it is
+	\item send $E_{pk}(\alpha)$ to P1
+\end{itemize}
+Part 3\\
+\\if alpha is one function is true 0 false, map that to
+\\0 if u is min otherwise 1
+\begin{itemize}
+	\item if F = $u>v$  
+		\subitem $E_{pk}(result) \gets E_{pk}(alpha)$
+	\item else	
+		\subitem $E_{pk}(result) \gets (E_{pk}(alpha)*E_pk(-1))^N-1$
+	\\if F was $u>v$ alpha already has 0 if u is min 1 if v
+	\\for the other function we have to subtract 1 and to get 0 if u is minimum 1 otherwise
+	\\return $E_pk(result)$
+\end{itemize}
+
+In phase two party one uses minimum function to get min index and returns that value
+\textbf{Return Minimum}\\
+P1 computes
+\begin{itemize}
+	\item $E_{pk}(u)  = BD(E_pk(u))$
+	\item $E_{pk}(v)  = BD(E_pk(v))$
+	\item $MinIndice = Minimum(E_{pk}(u),E_{pk}(v))$
+	\item for i=1 to l
+ 		\subitem $\Gamma_i \gets E_{pk}(v_i - u_i) * E_{pk}(r_i)$ where $r_i \in Z_n$
+ 		\\compute $v_i - u_i +r_i$
+ 	\item  $\Gamma' \gets \pi_1(\Gamma)$
+ 	\item send $\Gamma'$ and $MinIndice$ to P2
+\end{itemize}
+
+P2 computes
+
+\begin{itemize}
+	\item $MinIndice \gets D_{sk}(MinIndice)$
+	\item $M_i' \gets \Gamma_i^{(MinIndice}$ for $1\le i \le l$
+	\item return $M'$
+\end{itemize}
+
+P1 computes
+
+\begin{itemize}
+\item $M \gets \pi^{-1}(M')$
+\item $\lambda _i \gets M_i * E_{pk}(MinIndice)^{N-r_i}$ for i= 1 to l
+\\remove random terms from the difference so we can return the minimum
+\item $\Gamma \gets E_{pk}(u)*\lambda$
+\\this returns u if u is minimum otherwise v
+\item $E_{pk}(min(E_{pk}(u),E_{pk}(v))) = \Gamma$
+\end{itemize}
+
+Thus party one has minimum encrypted element between u \& v as required
 \subsection*{\textbf{Description}}
 
 \subsection*{\textbf{Example}}
