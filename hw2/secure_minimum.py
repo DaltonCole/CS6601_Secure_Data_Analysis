@@ -9,6 +9,9 @@ N = 13
 # Bit length
 l = 3
 
+# String formating for l bits 
+bit_str = '{:0' + str(l) + 'b}'
+
 # Generate pailliar keys
 public_key, private_key = paillier.generate_paillier_keypair()
 
@@ -37,10 +40,7 @@ def secure_multiplication(a, b):
 def minimum(u, v):
 	### Party 1 ###
 	# Randomly choose functionality
-	f = choice(["u > v"])#, "u < v"])
-
-	# String formating for l bits 
-	bit_str = '{:0' + str(l) + 'b}'
+	f = choice(["u > v", "u < v"])
 
 	# Initalize H_0
 	h_i = public_key.encrypt(0)
@@ -103,20 +103,61 @@ def minimum(u, v):
 		return (e_alpha + (public_key.encrypt(-1) * N)) - 1 # Double check
 
 
-x = 7
-y = 5
+x = 3
+y = 7
 
 #c = secure_multiplication(a, b)
 #print(private_key.decrypt(c) % N)
 
 ##### Phase 2 #####
+### Party 1 ###
 a = public_key.encrypt(x)
 b = public_key.encrypt(y)
 
-min_index = minimum(a, b)
-print(private_key.decrypt(min_index))
+# Min Index
+min_index = public_key.encrypt(private_key.decrypt(minimum(a, b)) % N) # Mod Field
+print("u < v: {}".format(private_key.decrypt(min_index)))
+
+# Gamma
+gamma = []
+r = []
+for i in range(l):
+	r.append(randrange(0, N))
+	gamma.append(public_key.encrypt(int(bit_str.format(y)[i]) - int(bit_str.format(x)[i])) + \
+		public_key.encrypt(r[-1]))
+
+# Permutation
+#shuffle(gamma)
+
+### Party 2 ### (permuted gamma and min_index)
+d_min_index = private_key.decrypt(min_index)
+
+m_prime = []
+for i in range(l):
+	m_prime.append(gamma[i] * d_min_index)
+
+### Party 1 ### (m_prime)
+
+# Lambda
+lam = []
+for i in range(l):
+	lam.append(m_prime[i] + (min_index * (N - r[i])))
 
 
+# Gamma
+gamma = []
+for i in range(l):
+	gamma.append(public_key.encrypt(int(bit_str.format(x)[i])) + lam[i])
+
+# Move back in field, and then to binary
+for i in range(l):
+	gamma[i] = public_key.encrypt((private_key.decrypt(gamma[i]) % N) % 2)
+
+# Convert back into a single number (need to do because of phe limitations)
+gamma = public_key.encrypt(int(''.join(str(x) for x in [private_key.decrypt(x) for x in gamma]), 2))
+
+
+print("Min: {}".format(private_key.decrypt(gamma)))
 
 
 
