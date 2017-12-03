@@ -29,6 +29,7 @@
 \usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
 \usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
 \usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
+\usepackage{hyperref}
 % These packages are all incorporated in the memoir class to one degree or another...
 
 %%% HEADERS & FOOTERS
@@ -230,5 +231,71 @@ Thus party one has minimum encrypted element between u \& v as required
 \subsection*{\textbf{Description}}
 
 \subsection*{\textbf{Example}}
+The above algorithm is implemented at: \url{https://github.com/drc14/Secure_Minimum}. The example was generated using the program implemented.
+
+\textbf{Minimum(E(u), E(v))} \\
+\textbf{Party 1} \\
+Choose random functionality f: u $>$ v \\
+For 1 in 3: \\
+\indent $E(u_1) = E(1)$ \\
+\indent $E(v_1) = E(1)$ \\
+\indent $E(u_1 * v_1) =  Secure_Multiplication(E(u_1), E(v_1)) = E(1)$ \\
+\indent F: u $>$ v: \\
+\indent \indent $W_1 = E(0)$ \\
+\indent $G_1 = E(u_1 \oplus v_1) = E(0)$ \\
+\indent $H_1 = E(0)$ \\
+\indent $\Phi_1 = E(12)$ \\
+\indent $L_1 = W_1 * \Phi^(t_1) = E(0) * E(12)^8 = E(5)$ \\
+For 2 in 3: \\
+\indent $E(u_2) = E(1)$ \\
+\indent $E(v_2) = E(0)$ \\
+\indent $E(u_2 * v_2) = Secure_Multiplication(E(u_2), E(v_2)) = E(0)$ \\
+\indent F: u $>$ v: \\
+\indent \indent $W_2 = E(1)$ \\
+\indent $G_2 = E(u_2 \oplus v_2) = E(1)$ \\
+\indent $H_2 = E(1)$ \\
+\indent $\Phi_2 = E(0)$ \\
+\indent $L_2 = W_2 * \Phi^(t_2) = E(1) * E(0)^{10} = E(1)$ \\
+For 3 in 3: \\
+\indent $E(u_3) = E(1)$ \\
+\indent $E(v_3) = E(1)$ \\
+\indent $E(u_3 * v_3) = Secure_Multiplication(E(u_3), E(v_3)) = E(1)$ \\
+\indent F: u $>$ v: \\
+\indent \indent $W_3 = E(0)$ \\
+\indent $G_3 = E(u_3 \oplus v_3) = E(0)$ \\
+\indent $H_3 = E(2)$ \\
+\indent $\Phi_3 = E(1)$ \\
+\indent $L_3 = W_3 * \Phi^(t_3) = E(0) * E(1)^{2} = E(2)$ \\
+$E(L) = E(5, 1, 2)$ \\
+$E(L') = E(2, 1, 5)$ \\ \\
+
+\textbf{Party 2} \\
+$M = D(E(L')) = [2, 1, 5]$ \\
+$\alpha = 1$ because 1 appears in $M$\\
+$E(\alpha) = E(1)$ \\ \\
+\textbf{Party 1} \\
+$F: u > v$ \\
+\indent Return $E(\alpha) = E(1)$ \\ \\
+
+\textbf{Party 1} \\
+E(u) = BD(E(7)) \\ 
+E(v) = BD(E(5)) \\
+Minimum\_Index $= Mininimum(E(u), E(v)) = E(1)$ \\
+For $i=1$ to 3:
+\indent $Gamma_1 = E(v_1 - u_1) * E(r_1) = E(1 - 1) * E(5) = E(5)$ \\
+\indent $Gamma_2 = E(v_2 - u_2) * E(r_2) = E(0 - 1) * E(10) = E(9)$ \\
+\indent $Gamma_3 = E(v_3 - u_3) * E(r_3) = E(1 - 1) * E(8) = E(8)$ \\
+$\Gamma = E(5, 9, 8)$ \\
+$\Gamma' = \pi_1(\Gamma) = E(9, 8, 5)$ \\ \\
+
+\textbf{Party 2} \\
+\textit{$Min_Index = D(E(Min_Index)) = 1$} \\ 
+$M' = E(9, 8, 5)^1 = E(9, 8, 5)$ \\ \\
+
+\textbf{Party 1} \\
+$M = \pi^{-1}(M') = E(5, 9, 8)$ \\
+$\lambda = M * E(\textit{Min\_Index})^{N - r_i} = E(4, 11, 10)$ \\
+$\Gamma = E(u) * \lambda = E(5)$ \\
+$E(min(E(u), E(v))) = \Gamma = E(5)$ \\
 
 \end{document}
